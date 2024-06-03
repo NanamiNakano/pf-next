@@ -1,11 +1,20 @@
 <script setup lang="ts">
-useHead({
-  title: "主页",
-})
+const { setLocale } = useI18n()
 </script>
 
 <template>
-  <p>a</p>
+  <div>
+    <Head>
+      <Title>{{ $t("title.home") }}</Title>
+    </Head>
+    <UButton @click="setLocale('en')">
+      EN
+    </UButton>
+    <UButton @click="setLocale('cn')">
+      CN
+    </UButton>
+    <ThemeSwitch />
+  </div>
 </template>
 
 <style scoped>

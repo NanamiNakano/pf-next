@@ -3,10 +3,15 @@ import type { PfClient } from "@nanaminakano/pfsdk"
 
 const { $pfClient } = useNuxtApp() as unknown as { $pfClient: PfClient }
 
-const siteSettings = await $pfClient.system.getSettings()
+const globalTitle = useState("globalTitle", () => "PortForward")
+await callOnce(async () => {
+  await $pfClient.system.getSettings().then((settings) => {
+    globalTitle.value = settings.Data ? settings.Data.site_name : "PortForward"
+  })
+})
 
 useSeoMeta({
-  titleTemplate: `%s | ${siteSettings.Data?.site_name}`,
+  titleTemplate: `%s | ${globalTitle.value}`,
 })
 </script>
 
