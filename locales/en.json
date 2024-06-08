@@ -1,25 +1,30 @@
 {
-    "text": {
-        "login": {
-            "loggedIn": "Logged in as",
-            "password": "Password",
-            "submit": "Login",
-            "toast": {
-                "logout": {
-                    "ok": "Logout successfully",
-                    "error": "Logout Unsuccessfully"
-                },
-                "login": {
-                    "ok": "Login successfully",
-                    "error": "Logout successfully"
-                }
-            },
-            "username": "Username"
-        }
+  "text": {
+    "index": {
+      "toast": {
+        "notLogged": "Not logged in"
+      }
     },
-    "title": {
-        "index": "Home",
-        "login": "Login",
-        "signup": "Signup"
+    "login": {
+      "loggedIn": "Logged in as",
+      "password": "Password",
+      "submit": "Login",
+      "toast": {
+        "login": {
+          "error": "Logout successfully",
+          "ok": "Login successfully"
+        },
+        "logout": {
+          "error": "Logout Unsuccessfully",
+          "ok": "Logout successfully"
+        }
+      },
+      "username": "Username"
     }
+  },
+  "title": {
+    "/": "Home",
+    "/login": "Login",
+    "/signup": "Signup"
+  }
 }

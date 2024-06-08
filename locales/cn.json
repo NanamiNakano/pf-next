@@ -1,25 +1,30 @@
 {
   "text": {
+    "index": {
+      "toast": {
+        "notLogged": "未登入"
+      }
+    },
     "login": {
       "loggedIn": "已登入为",
       "password": "密码",
       "submit": "登入",
       "toast": {
         "login": {
-          "ok": "登入成功",
-          "error": "登入失败"
+          "error": "登入失败",
+          "ok": "登入成功"
         },
         "logout": {
-          "ok": "登出成功",
-          "error": "登出失败"
+          "error": "登出失败",
+          "ok": "登出成功"
         }
       },
       "username": "用户名"
     }
   },
   "title": {
-    "index": "主页",
-    "login": "登入",
-    "signup": "注册"
+    "/": "主页",
+    "/login": "登入",
+    "/signup": "注册"
   }
 }

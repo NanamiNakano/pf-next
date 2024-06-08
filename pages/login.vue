@@ -11,7 +11,7 @@ const pfClient = usePfClient()
 const toast = useToast()
 const { t } = useI18n()
 const sessionCookie = useCookie("session_id")
-const loggedIn = ref(false)
+const loggedIn = useState("loggedIn")
 const userData = useState("userData", () => ({} as UserData))
 
 const schema = z.object({
@@ -32,7 +32,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       toast.add({ title: t("text.login.toast.login.ok") })
       loggedIn.value = true
       await pfClient.user.getData().then((rps) => {
-        console.log(rps)
         if (rps.Ok) {
           userData.value = rps.Data!
         }
@@ -60,7 +59,6 @@ onMounted(async () => {
   if (sessionCookie.value) {
     loggedIn.value = true
     await pfClient.user.getData().then((rps) => {
-      console.log(rps)
       if (rps.Ok) {
         userData.value = rps.Data!
       }

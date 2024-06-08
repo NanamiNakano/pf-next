@@ -1,5 +1,9 @@
 <script setup lang="ts">
 const { setLocale } = useI18n()
+const loggedIn = useState("loggedIn")
+if (!loggedIn.value) {
+  await navigateTo("/login")
+}
 </script>
 
 <template>
