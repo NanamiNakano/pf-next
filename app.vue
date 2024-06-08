@@ -1,17 +1,22 @@
 <script setup lang="ts">
-import type { PfClient } from "@nanaminakano/pfsdk"
+const pfClient = usePfClient()
 
-const { $pfClient } = useNuxtApp() as unknown as { $pfClient: PfClient }
-
+const route = useRoute()
+const getRouteBaseName = useRouteBaseName()
+const { t } = useI18n()
 const globalTitle = useState("globalTitle", () => "PortForward")
+const pageTitle = computed(() => {
+  return `${t(`title.${getRouteBaseName(route)}`)} | ${globalTitle.value}`
+})
+
 await callOnce(async () => {
-  await $pfClient.system.getSettings().then((settings) => {
+  await pfClient.system.getSettings().then((settings) => {
     globalTitle.value = settings.Data ? settings.Data.site_name : "PortForward"
   })
 })
 
-useSeoMeta({
-  titleTemplate: `%s | ${globalTitle.value}`,
+useHead({
+  title: () => pageTitle.value,
 })
 </script>
 
@@ -20,5 +25,6 @@ useSeoMeta({
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
+    <UNotifications />
   </div>
 </template>

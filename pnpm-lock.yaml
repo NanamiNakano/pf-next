@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@nanaminakano/pfsdk':
-        specifier: ^0.1.1
-        version: 0.1.1(undici@5.28.4)
+        specifier: ^0.1.2
+        version: 0.1.2(undici@5.28.4)
       '@nuxt/eslint':
         specifier: ^0.3.13
         version: 0.3.13(eslint@8.57.0)(nuxt@3.11.2(@opentelemetry/api@1.8.0)(@parcel/watcher@2.4.1)(@types/node@20.14.0)(@unocss/reset@0.60.4)(axios@1.7.2)(encoding@0.1.13)(eslint@8.57.0)(floating-vue@5.2.2(@nuxt/kit@3.11.2(rollup@4.18.0))(vue@3.4.27(typescript@5.4.5)))(fuse.js@6.6.2)(ioredis@5.4.1)(optionator@0.9.4)(rollup@4.18.0)(terser@5.31.0)(typescript@5.4.5)(unocss@0.60.4(postcss@8.4.38)(rollup@4.18.0)(vite@5.2.12(@types/node@20.14.0)(terser@5.31.0)))(vite@5.2.12(@types/node@20.14.0)(terser@5.31.0)))(rollup@4.18.0)(typescript@5.4.5)(vite@5.2.12(@types/node@20.14.0)(terser@5.31.0))
@@ -29,6 +29,9 @@ importers:
       vue-router:
         specifier: ^4.3.2
         version: 4.3.2(vue@3.4.27(typescript@5.4.5))
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@tailwindcss/typography':
         specifier: ^0.5.13
@@ -734,8 +737,8 @@ packages:
     peerDependencies:
       rollup: ^1.20.0 || ^2.0.0 || ^3.0.0 || ^4.0.0
 
-  '@nanaminakano/pfsdk@0.1.1':
-    resolution: {integrity: sha512-aNnKrZa1gjslD29+TYe45kAfev/S3+F5JBIAxdkDrLx9RIfOMUxDzPECiBDb7zQR/0WaY5/g6hcM+y+CYfpIDg==}
+  '@nanaminakano/pfsdk@0.1.2':
+    resolution: {integrity: sha512-zHSnh8QuQtqvHv1TgybnJDy5Heu9XFH6uKpm4rsLSE4I6mBsoQeeYaX5q/a7GBXgEw8jHD8GETCR6IHZ5hcXkQ==}
 
   '@netlify/functions@2.7.0':
     resolution: {integrity: sha512-4pXC/fuj3eGQ86wbgPiM4zY8+AsNrdz6vcv6FEdUJnZW+LqF8IWjQcY3S0d1hLeLKODYOqq4CkrzGyCpce63Nw==}
@@ -4921,6 +4924,9 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
@@ -5590,7 +5596,7 @@ snapshots:
       json5: 2.2.3
       rollup: 4.18.0
 
-  '@nanaminakano/pfsdk@0.1.1(undici@5.28.4)':
+  '@nanaminakano/pfsdk@0.1.2(undici@5.28.4)':
     dependencies:
       axios: 1.7.2
       axios-cookiejar-support: 5.0.2(axios@1.7.2)(tough-cookie@4.1.4)(undici@5.28.4)
@@ -10637,3 +10643,5 @@ snapshots:
       archiver-utils: 5.0.2
       compress-commons: 6.0.2
       readable-stream: 4.5.2
+
+  zod@3.23.8: {}

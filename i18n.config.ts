@@ -8,4 +8,5 @@ export default defineI18nConfig(() => ({
     cn: cn,
     en: en,
   },
+  fallbackLocale: "cn",
 }))

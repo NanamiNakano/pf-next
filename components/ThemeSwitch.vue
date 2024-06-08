@@ -18,7 +18,7 @@ const computedIcon = computed(() => {
   >
     <TablerIcon
       :name="computedIcon"
-      class="h-8 w-8"
+      class="h-6 w-6"
     />
   </UButton>
 </template>

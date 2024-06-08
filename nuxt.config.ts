@@ -1,7 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  css: ["~/assets/css/tailwind.css"],
+  css: ["~/assets/css/tailwind.css", "~/assets/css/transition.css"],
+
+  app: {
+    pageTransition: { name: "page", mode: "out-in" },
+  },
 
   runtimeConfig: {
     public: {
@@ -20,8 +24,14 @@ export default defineNuxtConfig({
   },
 
   i18n: {
-    locales: ["cn", "en"],
-    strategy: "prefix_except_default",
+    locales: [{
+      code: "cn",
+      iso: "zh-CN",
+    }, {
+      code: "en",
+      iso: "en-US",
+    }],
+    strategy: "no_prefix",
     defaultLocale: "cn",
   },
 

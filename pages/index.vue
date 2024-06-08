@@ -4,9 +4,6 @@ const { setLocale } = useI18n()
 
 <template>
   <div>
-    <Head>
-      <Title>{{ $t("title.home") }}</Title>
-    </Head>
     <UButton @click="setLocale('en')">
       EN
     </UButton>

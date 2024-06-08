@@ -1,5 +1,25 @@
 {
+  "text": {
+    "login": {
+      "loggedIn": "已登入为",
+      "password": "密码",
+      "submit": "登入",
+      "toast": {
+        "login": {
+          "ok": "登入成功",
+          "error": "登入失败"
+        },
+        "logout": {
+          "ok": "登出成功",
+          "error": "登出失败"
+        }
+      },
+      "username": "用户名"
+    }
+  },
   "title": {
-    "home": "主页"
+    "index": "主页",
+    "login": "登入",
+    "signup": "注册"
   }
 }
