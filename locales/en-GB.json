@@ -1,0 +1,75 @@
+{
+  "text": {
+    "index": {
+      "toast": {
+        "notLogged": {
+          "title": "Not signed in"
+        },
+        "sessionExpired": {
+          "description": "Please sign in again",
+          "title": "Session expired"
+        },
+        "siteError": {
+          "title": "Failed to load site settings"
+        }
+      }
+    },
+    "login": {
+      "loggedIn": "Signed in as",
+      "noAccount": "No account?",
+      "password": "Password",
+      "signup": "Sign up",
+      "submit": "Sign in",
+      "toast": {
+        "login": {
+          "error": {
+            "title": "Sign in unsuccessfully"
+          },
+          "ok": {
+            "title": "Sign in successfully"
+          }
+        },
+        "logout": {
+          "error": {
+            "title": "Log out unsuccessfully"
+          },
+          "ok": {
+            "title": "Log out successfully"
+          }
+        }
+      },
+      "username": "Username"
+    },
+    "signup": {
+      "confirmPassword": "Confirm Password",
+      "password": "Password",
+      "passwordMismatch": "Passwords do not match",
+      "refererCode": "Referer Code",
+      "required": "Required",
+      "submit": "Sign up",
+      "toast": {
+        "signup": {
+          "error": {
+            "title": "Sign up unsuccessfully"
+          },
+          "ok": {
+            "signin": "Go sign in",
+            "title": "Sign up successfully"
+          }
+        },
+        "system": {
+          "notAllowSignup": {
+            "description": "Please contact site admin",
+            "title": "Site does not allow registration"
+          }
+        }
+      },
+      "username": "Username"
+    }
+  },
+  "title": {
+    "/": "Home",
+    "/login": "Sign in",
+    "/signup": "Sign up"
+  }
+}

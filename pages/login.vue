@@ -10,8 +10,8 @@ definePageMeta({
 const pfClient = usePfClient()
 const toast = useToast()
 const { t } = useI18n()
-const sessionCookie = useCookie("session_id")
-const loggedIn = useState("loggedIn")
+const loggedIn = ref(false)
+const allowSignup = ref(false)
 const userData = useState("userData", () => ({} as UserData))
 
 const schema = z.object({
@@ -29,7 +29,7 @@ const state = ref({
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   await pfClient.auth.login(event.data.username, event.data.password).then(async (rps) => {
     if (rps.Ok) {
-      toast.add({ title: t("text.login.toast.login.ok") })
+      toast.add({ title: t("text.login.toast.login.ok.title") })
       loggedIn.value = true
       await pfClient.user.getData().then((rps) => {
         if (rps.Ok) {
@@ -38,25 +38,24 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       })
     }
     else {
-      toast.add({ title: t("text.login.toast.login.error"), description: rps.Msg, color: "red" })
+      toast.add({ title: t("text.login.toast.login.error.title"), description: rps.Msg, color: "red" })
     }
   })
 }
 
 async function logout() {
-  await pfClient.auth.logout().then((rps) => {
-    if (rps.Ok) {
-      loggedIn.value = false
-      toast.add({ title: t("text.login.toast.logout.ok") })
-    }
-    else {
-      toast.add({ title: t("text.login.toast.logout.error"), description: rps.Msg, color: "red" })
-    }
-  })
+  try {
+    localStorage.removeItem("Authorization")
+    loggedIn.value = false
+    toast.add({ title: t("text.login.toast.logout.ok.title") })
+  }
+  catch (_) {
+    toast.add({ title: t("text.login.toast.logout.error.title"), color: "red" })
+  }
 }
 
 onMounted(async () => {
-  if (sessionCookie.value) {
+  if (localStorage.getItem("Authorization")) {
     loggedIn.value = true
     await pfClient.user.getData().then((rps) => {
       if (rps.Ok) {
@@ -64,6 +63,14 @@ onMounted(async () => {
       }
     })
   }
+})
+
+onBeforeMount(async () => {
+  await pfClient.system.getSettings().then((rps) => {
+    if (rps.Data) {
+      allowSignup.value = rps.Data.register === "true"
+    }
+  })
 })
 </script>
 
@@ -78,7 +85,7 @@ onMounted(async () => {
     >
       <UFormGroup
         :label="$t('text.login.username')"
-        name="email"
+        name="username"
       >
         <UInput v-model="state.username" />
       </UFormGroup>
@@ -93,9 +100,21 @@ onMounted(async () => {
         />
       </UFormGroup>
 
-      <UButton type="submit">
-        {{ $t("text.login.submit") }}
-      </UButton>
+      <div class="flex justify-between items-center">
+        <UButton type="submit">
+          {{ $t("text.login.submit") }}
+        </UButton>
+        <div class="flex items-center">
+          <p v-if="allowSignup" class="text-gray-400 px-2">
+            {{ $t("text.login.noAccount") }}
+          </p>
+          <UButton
+            v-if="allowSignup"
+            :label="$t('text.login.signup')"
+            @click="navigateTo('/signup')"
+          />
+        </div>
+      </div>
     </UForm>
     <UContainer
       v-else

@@ -1,8 +1,8 @@
 const fs = require("fs")
 const path = require("path")
 
-const baseLangPath = path.join(process.cwd(), "locales", "cn.json")
-const otherLangPaths = ["en.json"].map(lang => path.join(process.cwd(), "locales", lang))
+const baseLangPath = path.join(process.cwd(), "locales", "zh-CN.json")
+const otherLangPaths = ["en-GB.json"].map(lang => path.join(process.cwd(), "locales", lang))
 
 function addMissingKeys(base, target) {
   for (const key in base) {

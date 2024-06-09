@@ -1,0 +1,75 @@
+{
+  "text": {
+    "index": {
+      "toast": {
+        "notLogged": {
+          "title": "未登入"
+        },
+        "sessionExpired": {
+          "description": "请重新登入",
+          "title": "会话过期"
+        },
+        "siteError": {
+          "title": "加载站点设置失败"
+        }
+      }
+    },
+    "login": {
+      "loggedIn": "已登入为",
+      "noAccount": "没有账号？",
+      "password": "密码",
+      "signup": "注册",
+      "submit": "登入",
+      "toast": {
+        "login": {
+          "error": {
+            "title": "登入失败"
+          },
+          "ok": {
+            "title": "登入成功"
+          }
+        },
+        "logout": {
+          "error": {
+            "title": "登出失败"
+          },
+          "ok": {
+            "title": "登出成功"
+          }
+        }
+      },
+      "username": "用户名"
+    },
+    "signup": {
+      "confirmPassword": "确认密码",
+      "password": "密码",
+      "passwordMismatch": "密码不一致",
+      "refererCode": "邀请码",
+      "required": "必填",
+      "submit": "注册",
+      "toast": {
+        "signup": {
+          "error": {
+            "title": "注册失败"
+          },
+          "ok": {
+            "signin": "去登入",
+            "title": "注册成功"
+          }
+        },
+        "system": {
+          "notAllowSignup": {
+            "description": "请联系管理员",
+            "title": "站点不允许注册"
+          }
+        }
+      },
+      "username": "用户名"
+    }
+  },
+  "title": {
+    "/": "主页",
+    "/login": "登入",
+    "/signup": "注册"
+  }
+}

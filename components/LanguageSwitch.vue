@@ -4,18 +4,18 @@ const currentLocale = computed(() => (getLocaleCookie()))
 const items = computed(() => ([
   [{
     label: "中文",
-    labelClass: "cn",
-    disabled: currentLocale.value === "cn",
+    labelClass: "zh-CN",
+    disabled: currentLocale.value === "zh-CN",
     click: () => {
-      setLocale("cn")
+      setLocale("zh-CN")
     },
   }],
   [{
     label: "English",
-    labelClass: "en",
-    disabled: currentLocale.value === "en",
+    labelClass: "en-GB",
+    disabled: currentLocale.value === "en-GB",
     click: () => {
-      setLocale("en")
+      setLocale("en-GB")
     },
   }],
 ]))

@@ -13,7 +13,7 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@nuxt/eslint", "@nuxtjs/i18n", "@nuxt/ui"],
+  modules: ["@nuxt/eslint", "nuxt-zod-i18n", "@nuxtjs/i18n", "@nuxt/ui"],
 
   eslint: {
     config: {
@@ -24,15 +24,28 @@ export default defineNuxtConfig({
   },
 
   i18n: {
-    locales: [{
-      code: "cn",
-      iso: "zh-CN",
-    }, {
-      code: "en",
-      iso: "en-US",
-    }],
     strategy: "no_prefix",
-    defaultLocale: "cn",
+    defaultLocale: "zh-CN",
+    langDir: "./locales",
+    locales: [
+      {
+        code: "en-GB",
+        dir: "ltr",
+        file: "en-GB.json",
+        flag: "gb",
+        isCatchallLocale: true,
+        iso: "en-GB",
+        name: "English",
+      },
+      {
+        code: "zh-CN",
+        dir: "ltr",
+        file: "zh-CN.json",
+        flag: "cn",
+        iso: "zh-CN",
+        name: "中文",
+      },
+    ],
   },
 
   postcss: {
