@@ -1,25 +1,23 @@
 <script setup lang="ts">
+import { useSiteSettingStore } from "~/stores/siteSetting"
+
 const pfClient = usePfClient()
 
 const route = useRoute()
 const { t } = useI18n()
 const toast = useToast()
-const globalTitle = ref("PortForward")
+const siteSetting = useSiteSettingStore()
+const userData = useUserDataStore()
 const pageTitle = computed(() => {
-  return `${t(`title.${route.path}`)} | ${globalTitle.value}`
-})
-
-await callOnce(async () => {
-  await pfClient.system.getSettings().then((settings) => {
-    globalTitle.value = settings.Data ? settings.Data.site_name : "PortForward"
-  })
+  return `${t(`title.${route.path}`)} | ${siteSetting.siteSetting.site_name}`
 })
 
 useHead({
   title: pageTitle,
 })
 
-onMounted(async () => {
+onBeforeMount(async () => {
+  console.log("Trigger:", siteSetting.siteSetting.register)
   if (route.path !== "/login" && route.path !== "/signup") {
     if (!localStorage.getItem("Authorization")) {
       toast.add({ title: t("text.index.toast.notLogged.title"), color: "red" })
@@ -40,10 +38,18 @@ onMounted(async () => {
     }
   }
 })
+
+onMounted(async () => {
+  await siteSetting.fetch()
+  if (localStorage.getItem("Authorization")) {
+    await userData.fetch()
+  }
+})
 </script>
 
 <template>
   <div>
+    <NuxtLoadingIndicator />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>

@@ -42,6 +42,8 @@
     },
     "signup": {
       "confirmPassword": "Confirm Password",
+      "hasAccount": "Already have an account?",
+      "login": "Sign in",
       "password": "Password",
       "passwordMismatch": "Passwords do not match",
       "refererCode": "Referer Code",

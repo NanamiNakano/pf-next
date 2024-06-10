@@ -9,8 +9,7 @@ definePageMeta({
 const pfClient = usePfClient()
 const toast = useToast()
 const { t } = useI18n()
-const allowSignup = ref(false)
-const needReferer = ref(true)
+const siteSetting = useSiteSettingStore()
 
 const schema = z.object({
   username: z.string(),
@@ -26,7 +25,7 @@ const schema = z.object({
     })
   }
 }).superRefine(({ refererCode }, ctx) => {
-  if (needReferer.value && (refererCode === undefined || refererCode.trim() === "")) {
+  if ((siteSetting.siteSetting.register_invite === "true") && (refererCode === undefined || refererCode.trim() === "")) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: t("text.signup.required"),
@@ -58,14 +57,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   })
 }
 
-onBeforeMount(async () => {
-  await pfClient.system.getSettings().then((rps) => {
-    if (rps.Data) {
-      allowSignup.value = rps.Data.register === "true"
-      needReferer.value = rps.Data.register_invite === "true"
-    }
-  })
-  if (!allowSignup.value) {
+onMounted(async () => {
+  await siteSetting.fetch()
+  if (siteSetting.siteSetting.register !== "true") {
     toast.add({
       title: t("text.signup.toast.system.notAllowSignup.title"),
       description: t("text.signup.toast.system.notAllowSignup.description"),
@@ -87,6 +81,7 @@ onBeforeMount(async () => {
       <UFormGroup
         :label="$t('text.signup.username')"
         name="username"
+        required
       >
         <UInput v-model="state.username" />
       </UFormGroup>
@@ -94,6 +89,7 @@ onBeforeMount(async () => {
       <UFormGroup
         :label="$t('text.signup.password')"
         name="password"
+        required
       >
         <UInput
           v-model="state.password"
@@ -104,6 +100,7 @@ onBeforeMount(async () => {
       <UFormGroup
         :label="$t('text.signup.confirmPassword')"
         name="confirmPassword"
+        required
       >
         <UInput
           v-model="state.confirmPassword"
@@ -114,13 +111,25 @@ onBeforeMount(async () => {
       <UFormGroup
         :label="$t('text.signup.refererCode')"
         name="refererCode"
+        :required="siteSetting.siteSetting.register_invite === 'true'"
       >
         <UInput v-model="state.refererCode" />
       </UFormGroup>
 
-      <UButton type="submit">
-        {{ $t("text.signup.submit") }}
-      </UButton>
+      <div class="flex justify-between items-center">
+        <UButton type="submit">
+          {{ $t("text.signup.submit") }}
+        </UButton>
+        <div class="flex items-center">
+          <p class="text-gray-400 px-2">
+            {{ $t("text.signup.hasAccount") }}
+          </p>
+          <UButton
+            :label="$t('text.signup.login')"
+            @click="navigateTo('/login')"
+          />
+        </div>
+      </div>
     </UForm>
   </div>
 </template>

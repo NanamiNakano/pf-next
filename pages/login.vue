@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { z } from "zod"
-import type { UserData } from "@nanaminakano/pfsdk"
 import type { FormSubmitEvent } from "#ui/types"
 
 definePageMeta({
@@ -11,8 +10,8 @@ const pfClient = usePfClient()
 const toast = useToast()
 const { t } = useI18n()
 const loggedIn = ref(false)
-const allowSignup = ref(false)
-const userData = useState("userData", () => ({} as UserData))
+const siteSetting = useSiteSettingStore()
+const userData = useUserDataStore()
 
 const schema = z.object({
   username: z.string(),
@@ -29,13 +28,9 @@ const state = ref({
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   await pfClient.auth.login(event.data.username, event.data.password).then(async (rps) => {
     if (rps.Ok) {
-      toast.add({ title: t("text.login.toast.login.ok.title") })
+      toast.add({ title: t("text.login.toast.login.ok.title"), timeout: 2000, callback: async () => await navigateTo("/") })
       loggedIn.value = true
-      await pfClient.user.getData().then((rps) => {
-        if (rps.Ok) {
-          userData.value = rps.Data!
-        }
-      })
+      await userData.fetch()
     }
     else {
       toast.add({ title: t("text.login.toast.login.error.title"), description: rps.Msg, color: "red" })
@@ -57,20 +52,7 @@ async function logout() {
 onMounted(async () => {
   if (localStorage.getItem("Authorization")) {
     loggedIn.value = true
-    await pfClient.user.getData().then((rps) => {
-      if (rps.Ok) {
-        userData.value = rps.Data!
-      }
-    })
   }
-})
-
-onBeforeMount(async () => {
-  await pfClient.system.getSettings().then((rps) => {
-    if (rps.Data) {
-      allowSignup.value = rps.Data.register === "true"
-    }
-  })
 })
 </script>
 
@@ -86,6 +68,7 @@ onBeforeMount(async () => {
       <UFormGroup
         :label="$t('text.login.username')"
         name="username"
+        required
       >
         <UInput v-model="state.username" />
       </UFormGroup>
@@ -93,6 +76,7 @@ onBeforeMount(async () => {
       <UFormGroup
         :label="$t('text.login.password')"
         name="password"
+        required
       >
         <UInput
           v-model="state.password"
@@ -105,11 +89,14 @@ onBeforeMount(async () => {
           {{ $t("text.login.submit") }}
         </UButton>
         <div class="flex items-center">
-          <p v-if="allowSignup" class="text-gray-400 px-2">
+          <p
+            v-if="siteSetting.siteSetting.register === 'true'"
+            class="text-gray-400 px-2"
+          >
             {{ $t("text.login.noAccount") }}
           </p>
           <UButton
-            v-if="allowSignup"
+            v-if="siteSetting.siteSetting.register === 'true'"
             :label="$t('text.login.signup')"
             @click="navigateTo('/signup')"
           />
@@ -130,9 +117,9 @@ onBeforeMount(async () => {
             class="w-16 h-16"
           />
           <div class="text-left">
-            <h2>{{ userData.name }}</h2>
+            <h2>{{ userData.userData.name }}</h2>
             <p class="font-light text-gray-400">
-              {{ userData.username }}
+              {{ userData.userData.username }}
             </p>
           </div>
         </div>

@@ -42,6 +42,8 @@
     },
     "signup": {
       "confirmPassword": "确认密码",
+      "hasAccount": "已有账号？",
+      "login": "登入",
       "password": "密码",
       "passwordMismatch": "密码不一致",
       "refererCode": "邀请码",

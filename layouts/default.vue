@@ -3,7 +3,10 @@
 </script>
 
 <template>
-  <p>a</p>
+  <div class="flex flex-col">
+    <AppHeader />
+    <slot />
+  </div>
 </template>
 
 <style scoped>
