@@ -61,4 +61,8 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+
+  ui: {
+    icons: ["tabler"]
+  }
 })

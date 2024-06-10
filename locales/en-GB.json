@@ -1,5 +1,9 @@
 {
   "text": {
+    "header": {
+      "info": "Info",
+      "logout": "Log out"
+    },
     "index": {
       "toast": {
         "notLogged": {

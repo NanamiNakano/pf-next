@@ -1,5 +1,9 @@
 {
   "text": {
+    "header": {
+      "info": "账号信息",
+      "logout": "登出"
+    },
     "index": {
       "toast": {
         "notLogged": {

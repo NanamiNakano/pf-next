@@ -11,6 +11,7 @@
     "sync-lang": "node scripts/sync-lang.cjs"
   },
   "dependencies": {
+    "@iconify-json/tabler": "^1.1.113",
     "@nanaminakano/pfsdk": "^0.1.4",
     "@nuxt/eslint": "^0.3.13",
     "@nuxt/ui": "^2.16.0",

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@iconify-json/tabler':
+        specifier: ^1.1.113
+        version: 1.1.113
       '@nanaminakano/pfsdk':
         specifier: ^0.1.4
         version: 0.1.4(undici@5.28.4)
@@ -627,6 +630,9 @@ packages:
 
   '@iconify-json/heroicons@1.1.21':
     resolution: {integrity: sha512-A+3L4KN+TjH3V8fQ2N2dkOOnLLxMgMBzO8RDT0P9YL+YzvLMIbe/lkDLSB8NB8x0DKWmkvTimoo1l4DKMwi7Zg==}
+
+  '@iconify-json/tabler@1.1.113':
+    resolution: {integrity: sha512-dT34D0gyqxgK2t91+8scQ+U387yZ/zb4r7/3CHqhmvaVMsnOT8DFtX0FhJzdr6ldnVH82pGAp59GGr97IT/UfQ==}
 
   '@iconify/collections@1.0.428':
     resolution: {integrity: sha512-nqV7v3HjZs5wXFAFciq+TrtEdM3N186q7IY+Kigu+2hmh+gn3Cp69EwicO565LTW7w2X8qx5lTHe4leDVM0TnQ==}
@@ -5461,6 +5467,10 @@ snapshots:
   '@humanwhocodes/object-schema@2.0.3': {}
 
   '@iconify-json/heroicons@1.1.21':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/tabler@1.1.113':
     dependencies:
       '@iconify/types': 2.0.0
 
