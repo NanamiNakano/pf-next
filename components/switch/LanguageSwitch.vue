@@ -28,6 +28,7 @@ const items = computed(() => ([
     :popper="{ placement: 'auto' }"
   >
     <UButton
+      square
       variant="ghost"
       color="gray"
     >

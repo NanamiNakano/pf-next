@@ -40,7 +40,9 @@ onBeforeMount(async () => {
 })
 
 onMounted(async () => {
-  await siteSetting.fetch()
+  if (!siteSetting.siteSetting.site_name) {
+    await siteSetting.fetch()
+  }
   if (localStorage.getItem("Authorization")) {
     await userData.fetch()
   }

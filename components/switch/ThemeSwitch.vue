@@ -12,6 +12,7 @@ const computedIcon = computed(() => {
 
 <template>
   <UButton
+    square
     variant="ghost"
     color="gray"
     @click="toggleColorMode"

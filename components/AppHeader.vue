@@ -34,7 +34,7 @@ const avatarDropdown = computed(() => [
 <template>
   <header class="border-gray-300 dark:border-gray-600 border-b">
     <div class="flex mx-auto justify-between items-center px-8 h-14">
-      <p>{{ siteSetting.siteSetting.site_name }}</p>
+      <p class="text-xl"> {{ siteSetting.siteSetting.site_name }}</p>
       <div class="flex items-center space-x-2">
         <ThemeSwitch />
         <LanguageSwitch />

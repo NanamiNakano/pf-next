@@ -3,9 +3,14 @@
 </script>
 
 <template>
-  <div class="flex flex-col">
+  <div class="h-screen bg-gray-100 dark:bg-gray-950 flex flex-col">
     <AppHeader />
-    <slot />
+    <div class="flex flex-1">
+      <AppMenu />
+      <div class="p-2">
+        <slot />
+      </div>
+    </div>
   </div>
 </template>
 
