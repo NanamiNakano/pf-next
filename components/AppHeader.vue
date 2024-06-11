@@ -26,7 +26,7 @@ const avatarDropdown = computed(() => [
   }, {
     label: t("text.header.logout"),
     icon: "i-tabler-logout",
-    click: () => logout()
+    click: () => logout(),
   }],
 ])
 </script>
@@ -34,7 +34,9 @@ const avatarDropdown = computed(() => [
 <template>
   <header class="border-gray-300 dark:border-gray-600 border-b">
     <div class="flex mx-auto justify-between items-center px-8 h-14">
-      <p class="text-xl"> {{ siteSetting.siteSetting.site_name }}</p>
+      <p class="text-xl">
+        {{ siteSetting.siteSetting.site_name }}
+      </p>
       <div class="flex items-center space-x-2">
         <ThemeSwitch />
         <LanguageSwitch />
@@ -51,15 +53,13 @@ const avatarDropdown = computed(() => [
           <template #account="{ item }">
             <div class="text-left">
               <p>
-                {{ t("text.login.loggedIn")}}
+                {{ t("text.login.loggedIn") }}
               </p>
               <p class="truncate font-medium text-gray-900 dark:text-white">
                 {{ item.label }}
               </p>
             </div>
           </template>
-
-
         </UDropdown>
       </div>
     </div>

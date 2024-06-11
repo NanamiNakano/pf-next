@@ -63,6 +63,6 @@ export default defineNuxtConfig({
   },
 
   ui: {
-    icons: ["tabler"]
-  }
+    icons: ["tabler"],
+  },
 })

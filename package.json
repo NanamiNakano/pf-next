@@ -8,7 +8,9 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "sync-lang": "node scripts/sync-lang.cjs"
+    "sync-lang": "node scripts/sync-lang.cjs",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@iconify-json/tabler": "^1.1.113",
