@@ -43,52 +43,53 @@ function toggleMenu() {
 </script>
 
 <template>
-  <header class="w-full border-gray-300 dark:border-gray-600 border-b">
-    <div class="flex mx-auto justify-between items-center px-8 h-14">
-      <div class="flex shrink items-center space-x-2 min-w-11">
-        <LazyUButton
-          square
-          variant="ghost"
-          color="gray"
-          class="md:hidden"
-          @click="toggleMenu"
-        >
-          <TablerIcon
-            :name="computedMenuIcon"
-            class="w-6 h-6"
-          />
-        </LazyUButton>
-        <p class="text-xl truncate">
-          {{ siteSetting.siteSetting.site_name }}
-        </p>
+  <div>
+    <header class="w-full border-gray-300 dark:border-gray-600 border-b">
+      <div class="flex mx-auto justify-between items-center px-8 h-14">
+        <div class="flex shrink items-center space-x-2 min-w-11">
+          <LazyUButton
+            square
+            variant="ghost"
+            color="gray"
+            class="md:hidden"
+            @click="toggleMenu"
+          >
+            <TablerIcon
+              :name="computedMenuIcon"
+              class="w-6 h-6"
+            />
+          </LazyUButton>
+          <p class="text-xl truncate">
+            {{ siteSetting.siteSetting.site_name }}
+          </p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <ThemeSwitch />
+          <LanguageSwitch />
+          <UDropdown
+            :items="avatarDropdown"
+            :ui="{ item: { disabled: 'cursor-text select-text' } }"
+            :popper="{ placement: 'auto' }"
+          >
+            <UAvatar
+              :alt="userData.userData.name"
+              size="md"
+            />
+            <template #account="{ item }">
+              <div class="text-left">
+                <p>
+                  {{ t("text.login.loggedIn") }}
+                </p>
+                <p class="truncate font-medium text-gray-900 dark:text-white">
+                  {{ item.label }}
+                </p>
+              </div>
+            </template>
+          </UDropdown>
+        </div>
       </div>
-      <div class="flex items-center space-x-2">
-        <ThemeSwitch />
-        <LanguageSwitch />
-        <UDropdown
-          :items="avatarDropdown"
-          :ui="{ item: { disabled: 'cursor-text select-text' } }"
-          :popper="{ placement: 'auto' }"
-        >
-          <UAvatar
-            :alt="userData.userData.name"
-            size="md"
-          />
-
-          <template #account="{ item }">
-            <div class="text-left">
-              <p>
-                {{ t("text.login.loggedIn") }}
-              </p>
-              <p class="truncate font-medium text-gray-900 dark:text-white">
-                {{ item.label }}
-              </p>
-            </div>
-          </template>
-        </UDropdown>
-      </div>
-    </div>
-  </header>
+    </header>
+  </div>
 </template>
 
 <style scoped>
