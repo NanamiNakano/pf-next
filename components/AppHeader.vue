@@ -3,6 +3,7 @@ const siteSetting = useSiteSettingStore()
 const userData = useUserDataStore()
 const toast = useToast()
 const { t } = useI18n()
+const emit = defineEmits(["toggleMenu"])
 
 async function logout() {
   try {
@@ -29,14 +30,38 @@ const avatarDropdown = computed(() => [
     click: () => logout(),
   }],
 ])
+
+const showMenu = ref(false)
+const computedMenuIcon = computed(() => {
+  return showMenu.value ? "x" : "menu-2"
+})
+
+function toggleMenu() {
+  showMenu.value = !showMenu.value
+  emit("toggleMenu", showMenu.value)
+}
 </script>
 
 <template>
-  <header class="border-gray-300 dark:border-gray-600 border-b">
+  <header class="w-full border-gray-300 dark:border-gray-600 border-b">
     <div class="flex mx-auto justify-between items-center px-8 h-14">
-      <p class="text-xl">
-        {{ siteSetting.siteSetting.site_name }}
-      </p>
+      <div class="flex shrink items-center space-x-2 min-w-11">
+        <LazyUButton
+          square
+          variant="ghost"
+          color="gray"
+          class="md:hidden"
+          @click="toggleMenu"
+        >
+          <TablerIcon
+            :name="computedMenuIcon"
+            class="w-6 h-6"
+          />
+        </LazyUButton>
+        <p class="text-xl truncate">
+          {{ siteSetting.siteSetting.site_name }}
+        </p>
+      </div>
       <div class="flex items-center space-x-2">
         <ThemeSwitch />
         <LanguageSwitch />

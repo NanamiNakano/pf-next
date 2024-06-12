@@ -44,6 +44,11 @@
       },
       "username": "Username"
     },
+    "menu": {
+      "collapse": "Collapse",
+      "expand": "Expand",
+      "home": "Home"
+    },
     "signup": {
       "confirmPassword": "Confirm Password",
       "hasAccount": "Already have an account?",

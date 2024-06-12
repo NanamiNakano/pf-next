@@ -1,15 +1,16 @@
 <script setup lang="ts">
 const isCollapsed = ref(false)
+const { t } = useI18n()
 
 function toggleCollapsed() {
   isCollapsed.value = !isCollapsed.value
 }
 
-const links = [{
-  label: "Home",
-  icon: "i-heroicons-home",
+const links = computed(() => [[{
+  label: t("text.menu.home"),
+  icon: "i-tabler-home",
   to: "/",
-}]
+}]])
 </script>
 
 <template>
@@ -25,14 +26,17 @@ const links = [{
         },
       }"
     />
-    <UButton @click="toggleCollapsed">
+    <LazyUButton
+      class="hidden md:flex"
+      @click="toggleCollapsed"
+    >
       <TablerIcon
         :name="`layout-sidebar-left-${(isCollapsed?'expand':'collapse')}`"
         class="container w-7 h-7 flex-shrink-0 transition"
       />
-      <p class="ml-1">
-        Toggle
-      </p>
-    </UButton>
+      <div class="truncate">
+        {{ $t("text.menu.collapse") }}
+      </div>
+    </LazyUButton>
   </aside>
 </template>

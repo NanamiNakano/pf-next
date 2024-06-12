@@ -44,6 +44,11 @@
       },
       "username": "用户名"
     },
+    "menu": {
+      "collapse": "折叠",
+      "expand": "展开",
+      "home": "主页"
+    },
     "signup": {
       "confirmPassword": "确认密码",
       "hasAccount": "已有账号？",
