@@ -5,6 +5,7 @@
       "logout": "Log out"
     },
     "index": {
+      "latestAnnouncement": "Latest Announcement",
       "toast": {
         "notLogged": {
           "title": "Not signed in"
@@ -16,7 +17,8 @@
         "siteError": {
           "title": "Failed to load site settings"
         }
-      }
+      },
+      "welcome": "Welcome back,"
     },
     "login": {
       "loggedIn": "Signed in as",

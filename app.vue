@@ -9,7 +9,7 @@ const toast = useToast()
 const siteSetting = useSiteSettingStore()
 const userData = useUserDataStore()
 const pageTitle = computed(() => {
-  return `${t(`title.${route.path}`)} | ${siteSetting.siteSetting.site_name}`
+  return `${t(`title.${route.path}`)} | ${siteSetting.siteSetting.site_name ? siteSetting.siteSetting.site_name : "PortForward"}`
 })
 
 useHead({
@@ -17,7 +17,6 @@ useHead({
 })
 
 onBeforeMount(async () => {
-  console.log("Trigger:", siteSetting.siteSetting.register)
   if (route.path !== "/login" && route.path !== "/signup") {
     if (!localStorage.getItem("Authorization")) {
       toast.add({ title: t("text.index.toast.notLogged.title"), color: "red" })

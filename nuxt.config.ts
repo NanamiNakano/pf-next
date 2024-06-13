@@ -20,7 +20,13 @@ export default defineNuxtConfig({
     },
   ],
 
-  modules: ["@nuxt/eslint", "nuxt-zod-i18n", "@nuxtjs/i18n", "@nuxt/ui", "@pinia/nuxt"],
+  modules: [
+    "@nuxt/eslint",
+    "nuxt-zod-i18n",
+    "@nuxtjs/i18n",
+    "@nuxt/ui",
+    "@pinia/nuxt",
+  ],
 
   eslint: {
     config: {

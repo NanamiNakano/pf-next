@@ -31,7 +31,7 @@ const callbackToggleMenu = (show: boolean) => {
       </Transition>
       <LazyAppMenu class="z-10 h-full flex-none hidden md:flex" />
       <div class="relative overflow-y-scroll flex flex-col w-full min-h-full justify-between">
-        <div class="p-2">
+        <div class="py-4 lg:py-6 px-4 md:px-6 lg:px-10">
           <slot />
         </div>
         <AppFooter />

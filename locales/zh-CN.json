@@ -5,6 +5,7 @@
       "logout": "登出"
     },
     "index": {
+      "latestAnnouncement": "最新公告",
       "toast": {
         "notLogged": {
           "title": "未登入"
@@ -16,7 +17,8 @@
         "siteError": {
           "title": "加载站点设置失败"
         }
-      }
+      },
+      "welcome": "欢迎回来，"
     },
     "login": {
       "loggedIn": "已登入为",
