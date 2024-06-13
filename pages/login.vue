@@ -10,6 +10,7 @@ const pfClient = usePfClient()
 const toast = useToast()
 const { t } = useI18n()
 const loggedIn = ref(false)
+const logging = ref(false)
 const siteSetting = useSiteSettingStore()
 const userData = useUserDataStore()
 
@@ -26,6 +27,7 @@ const state = ref({
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  logging.value = true
   await pfClient.auth.login(event.data.username, event.data.password).then(async (rps) => {
     if (rps.Ok) {
       toast.add({ title: t("text.login.toast.login.ok.title"), timeout: 2000, callback: async () => await navigateTo("/") })
@@ -36,6 +38,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       toast.add({ title: t("text.login.toast.login.error.title"), description: rps.Msg, color: "red" })
     }
   })
+  logging.value = false
 }
 
 async function logout() {
@@ -85,7 +88,10 @@ onMounted(async () => {
       </UFormGroup>
 
       <div class="flex justify-between items-center">
-        <UButton type="submit">
+        <UButton
+          type="submit"
+          :loading="logging"
+        >
           {{ $t("text.login.submit") }}
         </UButton>
         <div class="flex items-center">
@@ -136,7 +142,3 @@ onMounted(async () => {
     </UContainer>
   </div>
 </template>
-
-<style scoped>
-
-</style>

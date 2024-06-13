@@ -127,7 +127,3 @@ async function reloadAnnouncement() {
     </UModal>
   </div>
 </template>
-
-<style scoped>
-
-</style>

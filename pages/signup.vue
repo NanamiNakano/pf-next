@@ -10,6 +10,7 @@ const pfClient = usePfClient()
 const toast = useToast()
 const { t } = useI18n()
 const siteSetting = useSiteSettingStore()
+const registering = ref(false)
 
 const schema = z.object({
   username: z.string(),
@@ -44,6 +45,7 @@ const state = ref({
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  registering.value = true
   await pfClient.auth.register(event.data.username, event.data.password, undefined, event.data.refererCode).then(async (rps) => {
     if (rps.Ok) {
       toast.add({
@@ -55,6 +57,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       toast.add({ title: t("text.signup.toast.signup.error.title"), description: rps.Msg, color: "red" })
     }
   })
+  registering.value = false
 }
 
 onMounted(async () => {
@@ -117,7 +120,10 @@ onMounted(async () => {
       </UFormGroup>
 
       <div class="flex justify-between items-center">
-        <UButton type="submit">
+        <UButton
+          type="submit"
+          :loading="registering"
+        >
           {{ $t("text.signup.submit") }}
         </UButton>
         <div class="flex items-center">
@@ -133,7 +139,3 @@ onMounted(async () => {
     </UForm>
   </div>
 </template>
-
-<style scoped>
-
-</style>
