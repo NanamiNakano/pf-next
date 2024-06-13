@@ -10,7 +10,7 @@ const siteSetting = useSiteSettingStore()
       </p>
       <slot />
     </div>
-    <div class="flex fixed bottom-4 right-4">
+    <div class="flex fixed top-4 right-4">
       <LanguageSwitch />
       <ThemeSwitch />
     </div>

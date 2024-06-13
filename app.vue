@@ -9,7 +9,7 @@ const toast = useToast()
 const siteSetting = useSiteSettingStore()
 const userData = useUserDataStore()
 const pageTitle = computed(() => {
-  return `${t(`title.${route.path}`)} | ${siteSetting.siteSetting.site_name ? siteSetting.siteSetting.site_name : "PortForward"}`
+  return `${t(`title.${route.path}`)} | ${siteSetting.siteSetting.site_name}`
 })
 
 useHead({
@@ -39,7 +39,7 @@ onBeforeMount(async () => {
 })
 
 onMounted(async () => {
-  if (!siteSetting.siteSetting.site_name) {
+  if (!siteSetting.siteSetting.version) {
     await siteSetting.fetch()
   }
   if (localStorage.getItem("Authorization")) {

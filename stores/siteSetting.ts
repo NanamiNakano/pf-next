@@ -1,7 +1,7 @@
 import type { SystemSettings } from "@nanaminakano/pfsdk"
 
 export const useSiteSettingStore = defineStore("siteSettingStore", () => {
-  const siteSetting = ref<SystemSettings>(<SystemSettings>{})
+  const siteSetting = ref(<SystemSettings>{ site_name: "PortForward" })
   const pfClient = usePfClient()
 
   async function fetch() {

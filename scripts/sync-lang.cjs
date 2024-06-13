@@ -35,7 +35,7 @@ function syncLanguageFiles(baseLangPath, otherLangPaths) {
 
     addMissingKeys(baseData, langData)
 
-    fs.writeFileSync(langPath, JSON.stringify(langData, null, 4), "utf-8")
+    fs.writeFileSync(langPath, JSON.stringify(langData, null, 2), "utf-8")
   })
 }
 

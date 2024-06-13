@@ -6,6 +6,10 @@
     },
     "index": {
       "latestAnnouncement": "Latest Announcement",
+      "loading": "Loading...",
+      "noAnnouncement": "No announcement",
+      "readAll": "Read all",
+      "reload": "Reload",
       "toast": {
         "notLogged": {
           "title": "Not signed in"

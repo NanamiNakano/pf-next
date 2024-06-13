@@ -6,6 +6,10 @@
     },
     "index": {
       "latestAnnouncement": "最新公告",
+      "loading": "正在加载...",
+      "noAnnouncement": "没有公告",
+      "readAll": "阅读所有",
+      "reload": "重新加载",
       "toast": {
         "notLogged": {
           "title": "未登入"
