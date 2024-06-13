@@ -6,11 +6,17 @@ function toggleCollapsed() {
   isCollapsed.value = !isCollapsed.value
 }
 
-const links = computed(() => [[{
-  label: t("text.menu.home"),
-  icon: "i-tabler-home",
-  to: "/",
-}]])
+const links = computed(() => [
+  [{
+    label: t("title./"),
+    icon: "i-tabler-home",
+    to: "/",
+  }], [{
+    label: t("title./forward"),
+    icon: "i-tabler-polygon",
+    to: "/forward",
+  }],
+])
 </script>
 
 <template>

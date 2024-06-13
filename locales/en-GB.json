@@ -22,6 +22,7 @@
           "title": "Failed to load site settings"
         }
       },
+      "unread": "Unread",
       "welcome": "Welcome back,"
     },
     "login": {
@@ -52,8 +53,7 @@
     },
     "menu": {
       "collapse": "Collapse",
-      "expand": "Expand",
-      "home": "Home"
+      "expand": "Expand"
     },
     "signup": {
       "confirmPassword": "Confirm Password",
@@ -87,6 +87,7 @@
   "title": {
     "/": "Home",
     "/login": "Sign in",
-    "/signup": "Sign up"
+    "/signup": "Sign up",
+    "/forward": "Forward Rule"
   }
 }

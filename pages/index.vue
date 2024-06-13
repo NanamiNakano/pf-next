@@ -5,13 +5,31 @@ const userData = useUserDataStore()
 const announcement = useAnnouncementStore()
 const loadingAnnouncement = ref(true)
 const showAnnouncementModel = ref(false)
+const readAnnouncement = ref(0)
 const announcementPage = ref(1)
 const md = markdownit()
 
 onMounted(async () => {
   await announcement.fetchAll()
   loadingAnnouncement.value = false
-  console.log(announcement.announcements.length)
+
+  const storageRead = localStorage.getItem("readAnnouncement")
+  if (!storageRead) {
+    localStorage.setItem("readAnnouncement", "0")
+  }
+  if (announcement.announcements.length === 1) {
+    readAnnouncement.value = announcement.announcements[0].id
+  }
+  else {
+    readAnnouncement.value = parseInt(storageRead!)
+  }
+
+  watch(announcementPage, () => {
+    if (readAnnouncement.value < announcement.announcements[announcementPage.value - 1].id) {
+      readAnnouncement.value = announcement.announcements[announcementPage.value - 1].id
+      localStorage.setItem("readAnnouncement", readAnnouncement.value.toString())
+    }
+  })
 })
 
 async function reloadAnnouncement() {
@@ -62,12 +80,24 @@ async function reloadAnnouncement() {
         </div>
       </div>
 
-      <template #footer>
+      <template
+        v-if="!loadingAnnouncement && announcement.announcements.length >= 0"
+        #footer
+      >
         <UButton
-          v-if="!loadingAnnouncement && announcement.announcements.length >= 0"
           :label="$t('text.index.readAll')"
           @click="showAnnouncementModel = true"
-        />
+        >
+          <template #trailing>
+            <div class="font-light">
+              {{
+                announcement.announcements.filter((item) => {
+                  return item.id > readAnnouncement
+                }).length
+              }} {{ $t("text.index.unread") }}
+            </div>
+          </template>
+        </UButton>
       </template>
     </UCard>
 

@@ -22,6 +22,7 @@
           "title": "加载站点设置失败"
         }
       },
+      "unread": "未读",
       "welcome": "欢迎回来，"
     },
     "login": {
@@ -52,8 +53,7 @@
     },
     "menu": {
       "collapse": "折叠",
-      "expand": "展开",
-      "home": "主页"
+      "expand": "展开"
     },
     "signup": {
       "confirmPassword": "确认密码",
@@ -87,6 +87,7 @@
   "title": {
     "/": "主页",
     "/login": "登入",
-    "/signup": "注册"
+    "/signup": "注册",
+    "/forward": "转发规则"
   }
 }
