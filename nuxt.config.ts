@@ -10,6 +10,10 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiEndpoint: "",
+      sentry: {
+        dsn: "https://05960be87337ac4e4f1406b17c80b692@o4506035537510400.ingest.us.sentry.io/4507439376498688",
+        environment: "development",
+      },
     },
   },
 

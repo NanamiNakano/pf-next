@@ -122,11 +122,21 @@ onMounted(async () => {
             name="user-circle"
             class="w-16 h-16"
           />
-          <div class="text-left">
+          <div
+            v-if="userData.userData.name"
+            class="text-left"
+          >
             <h2>{{ userData.userData.name }}</h2>
             <p class="font-light text-gray-400">
               {{ userData.userData.username }}
             </p>
+          </div>
+          <div
+            v-else
+            class="space-y-2"
+          >
+            <USkeleton class="h-4 w-48" />
+            <USkeleton class="h-4 w-36" />
           </div>
         </div>
         <UButton

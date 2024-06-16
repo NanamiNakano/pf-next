@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useSiteSettingStore } from "~/stores/siteSetting"
-
 const pfClient = usePfClient()
 
 const route = useRoute()

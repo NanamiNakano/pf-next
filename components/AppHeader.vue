@@ -72,8 +72,14 @@ function toggleMenu() {
             :popper="{ placement: 'auto' }"
           >
             <UAvatar
+              v-if="userData.userData.name"
               :alt="userData.userData.name"
               size="md"
+            />
+            <USkeleton
+              v-else
+              class="h-10 w-10"
+              :ui="{ rounded: 'rounded-full' }"
             />
             <template #account="{ item }">
               <div class="text-left">
