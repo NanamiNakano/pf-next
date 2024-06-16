@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { sentryVitePlugin } from "@sentry/vite-plugin"
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/tailwind.css", "~/assets/css/transition.css"],
@@ -13,9 +15,14 @@ export default defineNuxtConfig({
       sentry: {
         dsn: "https://05960be87337ac4e4f1406b17c80b692@o4506035537510400.ingest.us.sentry.io/4507439376498688",
         environment: "development",
+        tracesSampleRate: parseFloat(process.env.NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE ?? "0.1"),
+        replaySampleRate: parseFloat(process.env.NUXT_PUBLIC_SENTRY_REPLAY_SAMPLE_RATE ?? "0.1"),
+        errorReplaySampleRate: parseFloat(process.env.NUXT_PUBLIC_SENTRY_ERROR_REPLAY_SAMPLE_RATE ?? "0.1"),
       },
     },
   },
+
+  sourcemap: true,
 
   components: [
     {
@@ -74,5 +81,15 @@ export default defineNuxtConfig({
 
   ui: {
     icons: ["tabler"],
+  },
+
+  vite: {
+    plugins: [
+      sentryVitePlugin({
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        org: "nanami-de-lab",
+        project: "port-forward-next",
+      }),
+    ],
   },
 })
