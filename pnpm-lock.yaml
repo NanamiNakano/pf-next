@@ -48,8 +48,8 @@ importers:
         specifier: ^3.4.27
         version: 3.4.27(typescript@5.4.5)
       vue-dompurify-html:
-        specifier: ^5.0.1
-        version: 5.0.1(vue@3.4.27(typescript@5.4.5))
+        specifier: ^5.1.0
+        version: 5.1.0(vue@3.4.27(typescript@5.4.5))
       vue-router:
         specifier: ^4.3.3
         version: 4.3.3(vue@3.4.27(typescript@5.4.5))
@@ -4954,8 +4954,8 @@ packages:
   vue-devtools-stub@0.1.0:
     resolution: {integrity: sha512-RutnB7X8c5hjq39NceArgXg28WZtZpGc3+J16ljMiYnFhKvd8hITxSWQSQ5bvldxMDU6gG5mkxl1MTQLXckVSQ==}
 
-  vue-dompurify-html@5.0.1:
-    resolution: {integrity: sha512-8yoMbo7PX4vt01k0dcCHvP4tY0fOCLkQeMhXXRNmH7/muIUTkFOQNzkAtE0RmqgaF/unabvYnsnCu2CjIMgueg==}
+  vue-dompurify-html@5.1.0:
+    resolution: {integrity: sha512-616o2/PBdOLM2bwlRWLdzeEC9NerLkwiudqNgaIJ5vBQWXec+u7Kuzh+45DtQQrids67s4pHnTnJZLVfyPMxbA==}
     peerDependencies:
       vue: ^3.0.0
 
@@ -10911,7 +10911,7 @@ snapshots:
 
   vue-devtools-stub@0.1.0: {}
 
-  vue-dompurify-html@5.0.1(vue@3.4.27(typescript@5.4.5)):
+  vue-dompurify-html@5.1.0(vue@3.4.27(typescript@5.4.5)):
     dependencies:
       dompurify: 3.1.5
       vue: 3.4.27(typescript@5.4.5)
