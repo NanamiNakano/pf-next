@@ -1,5 +1,12 @@
 {
   "text": {
+    "announcement": {
+      "toast": {
+        "error": {
+          "title": "Failed to load announcement"
+        }
+      }
+    },
     "header": {
       "info": "Info",
       "logout": "Log out"
@@ -86,8 +93,8 @@
   },
   "title": {
     "/": "Home",
+    "/forward": "Forward Rule",
     "/login": "Sign in",
-    "/signup": "Sign up",
-    "/forward": "Forward Rule"
+    "/signup": "Sign up"
   }
 }

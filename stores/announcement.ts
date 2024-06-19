@@ -4,6 +4,7 @@ import type { AnnouncementData } from "@nanaminakano/pfsdk"
 export const useAnnouncementStore = defineStore("announcementStore", () => {
   const announcements = ref<AnnouncementData[]>([])
   const toast = useToast()
+  const { t } = useI18n()
   const pfClient = usePfClient()
 
   async function fetchAll() {
@@ -12,11 +13,8 @@ export const useAnnouncementStore = defineStore("announcementStore", () => {
         announcements.value = rps.Data!
       }
       else {
-        toast.add({ title: "Error", color: "red" }) // TODO: i18n
+        toast.add({ title: t("text.announcement.toast.error.title"), description: rps.Msg, color: "red" })
       }
-    }).catch(() => {
-      toast.add({ title: "Error", color: "red" })
-      console.log("Error")
     })
   }
 

@@ -1,5 +1,12 @@
 {
   "text": {
+    "announcement": {
+      "toast": {
+        "error": {
+          "title": "加载公告失败"
+        }
+      }
+    },
     "header": {
       "info": "账号信息",
       "logout": "登出"
