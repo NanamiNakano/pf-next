@@ -32,7 +32,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (rps.Ok) {
       toast.add({ title: t("text.login.toast.login.ok.title"), timeout: 2000, callback: async () => await navigateTo("/") })
       loggedIn.value = true
-      await userData.fetch()
+      userData.fetch()
     }
     else {
       toast.add({ title: t("text.login.toast.login.error.title"), description: rps.Msg, color: "red" })

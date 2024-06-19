@@ -20,28 +20,28 @@ onBeforeMount(async () => {
       toast.add({ title: t("text.index.toast.notLogged.title"), color: "red" })
       await navigateTo("/login")
     }
-    else {
-      await pfClient.user.getData().then(async (rps) => {
-        if (!rps.Ok) {
-          localStorage.removeItem("Authorization")
-          toast.add({
-            title: t("text.index.toast.sessionExpired.title"),
-            description: t("text.index.toast.sessionExpired.description"),
-            color: "red",
-          })
-          await navigateTo("/login")
-        }
-      })
-    }
   }
 })
 
 onMounted(async () => {
+  pfClient.user.getData().then(async (rps) => {
+    if (!rps.Ok) {
+      localStorage.removeItem("Authorization")
+      toast.add({
+        title: t("text.index.toast.sessionExpired.title"),
+        description: t("text.index.toast.sessionExpired.description"),
+        color: "red",
+      })
+      await navigateTo("/login")
+    }
+  })
+
   if (!siteSetting.siteSetting.version) {
-    await siteSetting.fetch()
+    siteSetting.fetch()
   }
+
   if (localStorage.getItem("Authorization")) {
-    await userData.fetch()
+    userData.fetch()
   }
 })
 </script>

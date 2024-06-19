@@ -29,6 +29,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   Sentry.init({
     app: vueApp,
     dsn: config.public.sentry.dsn,
+    environment: config.public.sentry.environment,
     integrations: getSentryIntegrations(),
 
     // Set tracesSampleRate to 1.0 to capture 100%

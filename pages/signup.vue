@@ -61,7 +61,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 
 onMounted(async () => {
-  await siteSetting.fetch()
+  siteSetting.fetch()
   if (siteSetting.siteSetting.register !== "true") {
     toast.add({
       title: t("text.signup.toast.system.notAllowSignup.title"),
