@@ -47,7 +47,7 @@ const dropdown = computed(() => {
     <TablerIcon name="equal" />
     <UDropdown
       v-if="filters[filterKey].select"
-      :items="[filters[filterKey].select!]"
+      :items="[filters[filterKey].select!.map(item => ({ key: item.key, label: item.label, click: () => { search = item.key.toString() } }))]"
     />
     <UInput
       v-else

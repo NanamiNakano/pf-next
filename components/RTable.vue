@@ -1,10 +1,7 @@
 <script setup lang="ts" generic="T extends { [key: string]: any}">
-import type { DropdownItem } from "#ui/types"
-
 const props = defineProps<{
   rowData: T[]
   columns: Array<{ key: string, label?: string }>
-  actions: (row: T) => Array<DropdownItem[]>
   loading: boolean
 }>()
 const model = defineModel({ type: Array })
@@ -33,14 +30,15 @@ const pageDropdown = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(item => ({
       :loading="loading"
       class="border-gray-300 dark:border-gray-600 border rounded"
     >
-      <template #actions-data="{ row }">
-        <UDropdown :items="actions(row)">
-          <UButton
-            color="gray"
-            variant="ghost"
-            icon="i-tabler-dots"
-          />
-        </UDropdown>
+      <template
+        v-for="column in columns"
+        :key="column.key"
+        #[`${column.key}-data`]="slotProps"
+      >
+        <slot
+          :name="`${column.key}-data`"
+          v-bind="slotProps"
+        />
       </template>
     </UTable>
     <div class="flex justify-between">

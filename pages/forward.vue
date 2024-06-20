@@ -8,7 +8,7 @@ const loading = ref(true)
 const tableRowData = ref<RuleData[]>([])
 const tableColumns = [{
   key: "id",
-  label: "#",
+  label: "ID",
 }, {
   key: "user_id",
   label: "User ID",
@@ -39,8 +39,21 @@ const tableColumns = [{
 }, {
   key: "actions",
 }]
+const mode: Record<number, string> = {
+  0: "单转发",
+  1: "负载均衡",
+  2: "故障转移",
+  3: "IP Hash",
+}
+const protocol: Record<string, string> = {
+  tcpudp: "TCP/UDP",
+  http: "HTTP",
+  https: "HTTPS",
+  secure: "Secure",
+  securex: "SecureX",
+}
 
-const actionItems = (row: RuleData) => [
+const actions = (row: RuleData) => [
   [{
     label: "Edit",
     icon: "i-tabler-pencil",
@@ -100,9 +113,30 @@ onMounted(async () => {
       v-model="selected"
       :row-data="tableRowData"
       :columns="tableColumns"
-      :actions="actionItems"
       :loading="loading"
-    />
+    >
+      <template #mode-data="{ row }">
+        {{ mode[row.mode] }}
+      </template>
+
+      <template #protocol-data="{ row }">
+        {{ protocol[row.protocol] }}
+      </template>
+
+      <template #status-data="{ row }">
+        <RStatusBadge :status="row.status" />
+      </template>
+
+      <template #actions-data="{ row }">
+        <UDropdown :items="actions(row)">
+          <UButton
+            color="gray"
+            variant="ghost"
+            icon="i-tabler-dots"
+          />
+        </UDropdown>
+      </template>
+    </RTable>
     <USlideover v-model="slideIsOpen">
       <div class="p-4 flex-1">
         <UButton

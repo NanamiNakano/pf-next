@@ -7,6 +7,15 @@
     "table": {
       "count": "Showing {0} of {1} items",
       "pageCount": "{0} items per page"
+    },
+    "badge": {
+      "Active": "Active",
+      "Created": "Created",
+      "Disabled": "Disabled",
+      "Error": "Error",
+      "Exhaust": "Traffic Exhausted",
+      "Suspend": "Suspend",
+      "Sync": "Syncing"
     }
   },
   "text": {
