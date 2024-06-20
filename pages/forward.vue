@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { QueryParams, RuleData } from "@nanaminakano/pfsdk"
+import type { Filter } from "~/types/commons"
 
 const pfClient = usePfClient()
 const toast = useToast()
@@ -39,7 +40,8 @@ const tableColumns = [{
 }, {
   key: "actions",
 }]
-const mode: Record<number, string> = {
+
+const mode: Record<number, string> = { // TODO: i18n
   0: "单转发",
   1: "负载均衡",
   2: "故障转移",
@@ -51,6 +53,12 @@ const protocol: Record<string, string> = {
   https: "HTTPS",
   secure: "Secure",
   securex: "SecureX",
+}
+const proxyProtocol: Record<number, string> = {
+  0: "关闭",
+  1: "v1",
+  2: "v2",
+  255: "RProxy",
 }
 
 const actions = (row: RuleData) => [
@@ -87,13 +95,26 @@ async function fetchAll(query?: QueryParams) {
     }
     else {
       tableRowData.value = []
-      toast.add({ title: "Unable to load data", color: "red" })
+      toast.add({ title: "Unable to load data", description: rps.Msg, color: "red" }) // TODO: i18n
     }
   })
   loading.value = false
 }
 
-const filters = tableColumns.filter(item => !!item.label) as { key: string, label: string }[]
+const filters = (tableColumns.filter(item => !!item.label) as { key: string, label: string }[]).map((item) => {
+  if (item.key === "mode") {
+    return { key: item.key, label: item.label, select: recordToArray(mode) }
+  }
+  else if (item.key === "protocol") {
+    return { key: item.key, label: item.label, select: recordToArray(protocol) }
+  }
+  else if (item.key === "proxy_protocol") {
+    return { key: "proxy", label: item.label, select: recordToArray(proxyProtocol) }
+  }
+  else {
+    return { key: item.key, label: item.label }
+  }
+}) as Filter[]
 
 onMounted(async () => {
   await fetchAll()
@@ -107,7 +128,7 @@ onMounted(async () => {
     </div>
     <RSearch
       :filters="filters"
-      @search="(params) => { fetchAll(params) }"
+      @search="(params) => { fetchAll(params); console.log(params) }"
     />
     <RTable
       v-model="selected"
@@ -121,6 +142,10 @@ onMounted(async () => {
 
       <template #protocol-data="{ row }">
         {{ protocol[row.protocol] }}
+      </template>
+
+      <template #proxy_protocol-data="{ row }">
+        {{ proxyProtocol[row.proxy_protocol] }}
       </template>
 
       <template #status-data="{ row }">

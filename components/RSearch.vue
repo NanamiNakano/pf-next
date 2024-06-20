@@ -1,35 +1,44 @@
 <script setup lang="ts">
 import type { QueryParams } from "@nanaminakano/pfsdk"
+import type { Filter } from "~/types/commons"
 
 const props = defineProps<{
-  filters: {
-    key: string
-    label: string
-    select?: { key: number, label: string }[]
-  }[]
+  filters: Filter[]
 }>()
 const emit = defineEmits(["search"])
 
 const search = ref("")
+const searchDropdownIndex = ref(0)
 const precisely = ref(true)
 const params = computed(() => {
   return {
-    filter: props.filters[filterKey.value].key,
+    filter: props.filters[filterIndex.value].key,
     search: search.value,
     exact: precisely.value,
   } as QueryParams
 })
 
-const filterKey = ref(0)
+const filterIndex = ref(0)
 const dropdown = computed(() => {
   return props.filters.map((item, index) => ({
     key: item.key,
     label: item.label,
     click: () => {
-      filterKey.value = index
+      filterIndex.value = index
+      search.value = ""
       if (props.filters[index].select) {
         precisely.value = true
       }
+    },
+  }))
+})
+const filterDropdown = computed(() => {
+  return props.filters[filterIndex.value].select!.map((item, index) => ({
+    key: item.key,
+    label: item.label,
+    click: () => {
+      searchDropdownIndex.value = index
+      search.value = item.key.toString()
     },
   }))
 })
@@ -40,15 +49,21 @@ const dropdown = computed(() => {
     <UDropdown :items="[dropdown]">
       <UButton
         color="white"
-        :label="`${filters[filterKey].label}`"
+        :label="`${filters[filterIndex].label}`"
         trailing-icon="i-tabler-chevron-down"
       />
     </UDropdown>
     <TablerIcon name="equal" />
     <UDropdown
-      v-if="filters[filterKey].select"
-      :items="[filters[filterKey].select!.map(item => ({ key: item.key, label: item.label, click: () => { search = item.key.toString() } }))]"
-    />
+      v-if="filters[filterIndex].select"
+      :items="[filterDropdown]"
+    >
+      <UButton
+        color="white"
+        :label="`${filterDropdown[searchDropdownIndex].label}`"
+        trailing-icon="i-tabler-chevron-down"
+      />
+    </UDropdown>
     <UInput
       v-else
       v-model="search"
@@ -60,7 +75,7 @@ const dropdown = computed(() => {
     <div>{{ $t("r.search.precisely") }}</div>
     <UToggle
       v-model="precisely"
-      :disabled="!!filters[filterKey].select"
+      :disabled="!!filters[filterIndex].select"
       on-icon="i-tabler-check"
       off-icon="i-tabler-x"
     />
