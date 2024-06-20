@@ -70,6 +70,7 @@ export default defineNuxtConfig({
         name: "中文",
       },
     ],
+    lazy: true,
   },
 
   postcss: {

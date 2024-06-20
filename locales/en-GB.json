@@ -1,4 +1,14 @@
 {
+  "r": {
+    "search": {
+      "precisely": "Precisely",
+      "search": "Search"
+    },
+    "table": {
+      "count": "Showing {0} of {1} items",
+      "pageCount": "{0} items per page"
+    }
+  },
   "text": {
     "announcement": {
       "toast": {

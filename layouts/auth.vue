@@ -4,7 +4,7 @@ const siteSetting = useSiteSettingStore()
 
 <template>
   <div>
-    <div class="flex flex-col min-h-screen items-center justify-center bg-gray-100 dark:bg-gray-950">
+    <div class="flex flex-col min-h-screen items-center justify-center bg-blend-soft-light dark:bg-gray-950">
       <p class="pb-4 text-xl">
         {{ siteSetting.siteSetting.site_name }}
       </p>

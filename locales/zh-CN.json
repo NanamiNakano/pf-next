@@ -1,4 +1,14 @@
 {
+  "r": {
+    "search": {
+      "precisely": "精确",
+      "search": "搜索"
+    },
+    "table": {
+      "count": "展示 {1} 个中的 {0} 个项目",
+      "pageCount": "每页 {0} 个项目"
+    }
+  },
   "text": {
     "announcement": {
       "toast": {
@@ -93,8 +103,8 @@
   },
   "title": {
     "/": "主页",
+    "/forward": "转发规则",
     "/login": "登入",
-    "/signup": "注册",
-    "/forward": "转发规则"
+    "/signup": "注册"
   }
 }
