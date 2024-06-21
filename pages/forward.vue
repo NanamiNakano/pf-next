@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { QueryParams, RuleData } from "@nanaminakano/pfsdk"
+import type { ForwardNodeData, QueryParams, RuleData } from "@nanaminakano/pfsdk"
 import { z } from "zod"
 import type { Filter } from "~/types/commons"
 import type { FormSubmitEvent } from "#ui/types"
@@ -19,7 +19,7 @@ const tableColumns = [{
   label: "User ID",
 }, {
   key: "node_id",
-  label: "Node ID",
+  label: "Node",
 }, {
   key: "name",
   label: "Name",
@@ -95,6 +95,8 @@ const selected = ref<RuleData[]>([])
 
 const slideIsOpen = ref(false)
 
+const nodeData = ref<ForwardNodeData[]>()
+
 async function fetchAll(query?: QueryParams) {
   loading.value = true
   await pfClient.forwardRule.getRuleList(query).then((rps) => {
@@ -109,7 +111,7 @@ async function fetchAll(query?: QueryParams) {
   loading.value = false
 }
 
-const filters = tableColumns.filter(item => item.label !== undefined).reduce((record, {
+const filters = computed(() => (tableColumns.filter(item => item.label !== undefined).reduce((record, {
   key,
   label,
 }) => {
@@ -122,11 +124,17 @@ const filters = tableColumns.filter(item => item.label !== undefined).reduce((re
   else if (key === "proxy_protocol") {
     record["proxy"] = { label: label, select: proxyProtocol }
   }
+  else if (nodeData.value !== undefined && key === "node_id") {
+    record[key] = { label: label, select: nodeData.value.reduce((record, { id, name }) => {
+      record[id] = name
+      return record
+    }, {} as Record<number, string>) }
+  }
   else {
     record[key] = { label: label }
   }
   return record
-}, {} as Record<string, Filter>)
+}, {} as Record<string, Filter>)))
 
 const schema = z.object({
   node_id: z.number(),
@@ -142,12 +150,20 @@ type Schema = z.output<typeof schema>
 const state = ref({} as RuleData)
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  // Do something with data
   console.log(event.data)
 }
 
 onMounted(async () => {
   await fetchAll()
+  await pfClient.node.getForwardNodes().then((rps) => {
+    if (rps.Ok) {
+      nodeData.value = rps.Data
+      console.log(nodeData.value)
+    }
+    else {
+      toast.add({ title: "Unable to load node data", description: rps.Msg, color: "red" })
+    }
+  })
 })
 </script>
 
@@ -173,6 +189,15 @@ onMounted(async () => {
       :columns="tableColumns"
       :loading="loading"
     >
+      <template #node_id-data="{ row }">
+        <div v-if="nodeData === undefined">
+          {{ row.node_id }}
+        </div>
+        <div v-else>
+          {{ nodeData!.findLast(item => (item.id === row.node_id))?.name }}
+        </div>
+      </template>
+
       <template #mode-data="{ row }">
         {{ mode[row.mode] }}
       </template>
