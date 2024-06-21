@@ -3,6 +3,7 @@ import type { QueryParams, RuleData } from "@nanaminakano/pfsdk"
 import { z } from "zod"
 import type { Filter } from "~/types/commons"
 import type { FormSubmitEvent } from "#ui/types"
+import RSlideover from "~/components/RSlideover.vue"
 
 const pfClient = usePfClient()
 const toast = useToast()
@@ -198,35 +199,28 @@ onMounted(async () => {
         </UDropdown>
       </template>
     </RTable>
-    <USlideover v-model="slideIsOpen">
-      <div class="p-4 flex-1">
-        <UButton
-          color="gray"
-          variant="ghost"
-          size="sm"
-          icon="i-tabler-x"
-          class="flex sm:hidden absolute end-5 top-5 z-10"
-          square
-          padded
-          @click="slideIsOpen = false"
-        />
-        <UForm
-          :schema="schema"
-          :state="state"
-          class="space-y-4"
-          @submit="onSubmit"
+    <RSlideover v-model="slideIsOpen">
+      <UForm
+        :schema="schema"
+        :state="state"
+        class="space-y-4"
+        @submit="onSubmit"
+      >
+        <div v-if="edit">
+          ID: {{ state.id }}
+        </div>
+        <UDivider v-if="edit" />
+        <UFormGroup
+          label="Protocol"
+          name="protocol"
         >
-          <div v-if="edit">
-            ID: {{ state.id }}
-          </div>
-          <UDivider v-if="edit" />
-          <UFormGroup label="Protocol" name="protocol">
-            <USelect v-model="state.protocol"
-                         :options="Object.entries(protocol).map(([key, label]) => ({ name: label, value: key }))"
-                         option-attribute="name" />
-          </UFormGroup>
-        </UForm>
-      </div>
-    </USlideover>
+          <USelect
+            v-model="state.protocol"
+            :options="Object.entries(protocol).map(([key, label]) => ({ name: label, value: key }))"
+            option-attribute="name"
+          />
+        </UFormGroup>
+      </UForm>
+    </RSlideover>
   </div>
 </template>
