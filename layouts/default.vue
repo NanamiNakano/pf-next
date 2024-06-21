@@ -3,7 +3,6 @@ const showMenu = ref(false)
 
 const callbackToggleMenu = (show: boolean) => {
   showMenu.value = show
-  console.log(show)
 }
 </script>
 

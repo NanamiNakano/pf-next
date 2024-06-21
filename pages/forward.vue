@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import type { QueryParams, RuleData } from "@nanaminakano/pfsdk"
+import { z } from "zod"
 import type { Filter } from "~/types/commons"
+import type { FormSubmitEvent } from "#ui/types"
 
 const pfClient = usePfClient()
 const toast = useToast()
 
 const loading = ref(true)
+const edit = ref(true)
 const tableRowData = ref<RuleData[]>([])
 const tableColumns = [{
   key: "id",
@@ -65,7 +68,11 @@ const actions = (row: RuleData) => [
   [{
     label: "Edit",
     icon: "i-tabler-pencil",
-    click: () => { slideIsOpen.value = true },
+    click: () => {
+      edit.value = true
+      slideIsOpen.value = true
+      state.value = row
+    },
   }, {
     label: "Delete",
     icon: "i-tabler-trash",
@@ -101,20 +108,39 @@ async function fetchAll(query?: QueryParams) {
   loading.value = false
 }
 
-const filters = (tableColumns.filter(item => !!item.label) as { key: string, label: string }[]).map((item) => {
-  if (item.key === "mode") {
-    return { key: item.key, label: item.label, select: recordToArray(mode) }
+const filters = (tableColumns.filter(item => !!item.label) as { key: string, label: string }[]).reduce((record, { key, label }) => {
+  if (key === "mode") {
+    record[key] = { label: label, select: mode }
   }
-  else if (item.key === "protocol") {
-    return { key: item.key, label: item.label, select: recordToArray(protocol) }
+  else if (key === "protocol") {
+    record[key] = { label: label, select: protocol }
   }
-  else if (item.key === "proxy_protocol") {
-    return { key: "proxy", label: item.label, select: recordToArray(proxyProtocol) }
+  else if (key === "proxy_protocol") {
+    record["proxy"] = { label: label, select: proxyProtocol }
   }
   else {
-    return { key: item.key, label: item.label }
+    record[key] = { label: label }
   }
-}) as Filter[]
+  return record
+}, {} as Record<string, Filter>)
+
+const schema = z.object({
+  node_id: z.number(),
+  name: z.string(),
+  mode: z.number(),
+  protocol: z.number(),
+  bind: z.number(),
+  proxy_protocol: z.number(),
+})
+
+type Schema = z.output<typeof schema>
+
+const state = ref({} as RuleData)
+
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  // Do something with data
+  console.log(event.data)
+}
 
 onMounted(async () => {
   await fetchAll()
@@ -124,11 +150,18 @@ onMounted(async () => {
 <template>
   <div class="flex flex-col space-y-2">
     <div class="flex space-x-2">
-      <UButton label="New" />
+      <UButton
+        label="New"
+        @click="() => {
+          edit = false
+          slideIsOpen = true
+          state = {} as RuleData
+        }"
+      />
     </div>
     <RSearch
       :filters="filters"
-      @search="(params) => { fetchAll(params); console.log(params) }"
+      @search="(params) => { fetchAll(params) }"
     />
     <RTable
       v-model="selected"
@@ -174,7 +207,17 @@ onMounted(async () => {
           padded
           @click="slideIsOpen = false"
         />
-        <USkeleton class="h-full" />
+        <UForm
+          :schema="schema"
+          :state="state"
+          class="space-y-4"
+          @submit="onSubmit"
+        >
+          <div v-if="edit">
+            ID: {{ state.id }}
+          </div>
+          <UDivider v-if="edit" />
+        </UForm>
       </div>
     </USlideover>
   </div>

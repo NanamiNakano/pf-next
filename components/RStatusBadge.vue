@@ -11,7 +11,7 @@ const color = computed(() => {
     return "amber"
   }
   else {
-    return null
+    return "primary"
   }
 })
 </script>
