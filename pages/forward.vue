@@ -71,7 +71,7 @@ const actions = (row: RuleData) => [
     click: () => {
       edit.value = true
       slideIsOpen.value = true
-      state.value = row
+      state.value = structuredClone(toRaw(row))
     },
   }, {
     label: "Delete",
@@ -108,7 +108,10 @@ async function fetchAll(query?: QueryParams) {
   loading.value = false
 }
 
-const filters = (tableColumns.filter(item => !!item.label) as { key: string, label: string }[]).reduce((record, { key, label }) => {
+const filters = tableColumns.filter(item => item.label !== undefined).reduce((record, {
+  key,
+  label,
+}) => {
   if (key === "mode") {
     record[key] = { label: label, select: mode }
   }
@@ -128,7 +131,7 @@ const schema = z.object({
   node_id: z.number(),
   name: z.string(),
   mode: z.number(),
-  protocol: z.number(),
+  protocol: z.string(),
   bind: z.number(),
   proxy_protocol: z.number(),
 })
@@ -217,6 +220,11 @@ onMounted(async () => {
             ID: {{ state.id }}
           </div>
           <UDivider v-if="edit" />
+          <UFormGroup label="Protocol" name="protocol">
+            <USelect v-model="state.protocol"
+                         :options="Object.entries(protocol).map(([key, label]) => ({ name: label, value: key }))"
+                         option-attribute="name" />
+          </UFormGroup>
         </UForm>
       </div>
     </USlideover>
