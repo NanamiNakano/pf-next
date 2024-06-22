@@ -114,6 +114,40 @@ const actions = (row: RuleData) => [
       })
       loading.value = false
     },
+  }, {
+    label: "Disable",
+    icon: "i-tabler-circle-off",
+    disabled: row.status === "Disabled",
+    click: async () => {
+      loading.value = true
+      await pfClient.forwardRule.stop(row.id).then(async (rps) => {
+        if (rps.Ok) {
+          toast.add({ title: "Stop successfully" })
+          await fetchAll()
+        }
+        else {
+          toast.add({ title: "Stop unsuccessfully", description: rps.Msg, color: "red" })
+        }
+      })
+      loading.value = false
+    },
+  }, {
+    label: "Enable",
+    icon: "i-tabler-player-play",
+    disabled: row.status !== "Disabled",
+    click: async () => {
+      loading.value = true
+      await pfClient.forwardRule.start(row.id).then(async (rps) => {
+        if (rps.Ok) {
+          toast.add({ title: "Start successfully" })
+          await fetchAll()
+        }
+        else {
+          toast.add({ title: "Start unsuccessfully", description: rps.Msg, color: "red" })
+        }
+      })
+      loading.value = false
+    }
   }]]
 
 const nodeData = ref<ForwardNodeData[]>()
@@ -429,9 +463,9 @@ onMounted(async () => {
                 placeholder="Key"
               />
               <UButton
+                :disabled="state.conf[pendingConfKey] !== undefined"
                 icon="i-tabler-plus"
                 label="Add"
-                :disabled="state.conf[pendingConfKey] !== undefined"
                 @click="() => {
                   state.conf[pendingConfKey] = ''
                   pendingConfKey = ''
