@@ -1,5 +1,15 @@
 {
   "r": {
+    "badge": {
+      "Active": "正常",
+      "Banned": "已封禁",
+      "Created": "已创建",
+      "Disabled": "已禁用",
+      "Error": "错误",
+      "Exhaust": "流量耗尽",
+      "Suspend": "挂起",
+      "Sync": "同步中"
+    },
     "search": {
       "precisely": "精确",
       "search": "搜索"
@@ -7,15 +17,6 @@
     "table": {
       "count": "展示 {1} 个中的 {0} 个项目",
       "pageCount": "每页 {0} 个项目"
-    },
-    "badge": {
-      "Active": "正常",
-      "Created": "已创建",
-      "Disabled": "已禁用",
-      "Error": "错误",
-      "Exhaust": "流量耗尽",
-      "Suspend": "挂起",
-      "Sync": "同步中"
     }
   },
   "text": {

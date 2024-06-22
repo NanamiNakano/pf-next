@@ -1,20 +1,21 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 const model = defineModel<boolean>()
 </script>
 
 <template>
   <USlideover v-model="model">
-    <div class="p-4 flex-1">
-      <UButton
-        color="gray"
-        variant="ghost"
-        size="sm"
-        icon="i-tabler-x"
-        class="flex sm:hidden absolute end-5 top-5 z-10"
-        square
-        padded
-        @click="model = false"
-      />
+    <div class="p-4 flex-1 overflow-y-scroll">
+      <div class="flex justify-end">
+        <UButton
+          color="gray"
+          icon="i-tabler-x"
+          padded
+          size="sm"
+          square
+          variant="ghost"
+          @click="model = false"
+        />
+      </div>
       <slot />
     </div>
   </USlideover>

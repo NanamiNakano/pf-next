@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import type { ForwardNodeData, QueryParams, RuleData } from "@nanaminakano/pfsdk"
+<script lang="ts" setup>
+import type { ForwardNodeData, PendingRuleData, QueryParams, RuleData, RuleTarget } from "@nanaminakano/pfsdk"
 import { z } from "zod"
 import type { Filter } from "~/types/commons"
 import type { FormSubmitEvent } from "#ui/types"
@@ -11,18 +11,37 @@ const toast = useToast()
 const loading = ref(true)
 const edit = ref(true)
 const tableRowData = ref<RuleData[]>([])
+const selected = ref<RuleData[]>([])
+
+const state = ref({ conf: {} } as PendingRuleData)
+const editingId = ref(0)
+
+async function fetchAll(query?: QueryParams) {
+  loading.value = true
+  await pfClient.forwardRule.getRuleList(query).then((rps) => {
+    if (rps.Ok) {
+      tableRowData.value = rps.Data!
+    }
+    else {
+      tableRowData.value = []
+      toast.add({ title: "Unable to load data", description: rps.Msg, color: "red" })
+    }
+  })
+  loading.value = false
+}
+
 const tableColumns = [{
   key: "id",
   label: "ID",
+}, {
+  key: "name",
+  label: "Name",
 }, {
   key: "user_id",
   label: "User ID",
 }, {
   key: "node_id",
   label: "Node",
-}, {
-  key: "name",
-  label: "Name",
 }, {
   key: "mode",
   label: "Mode",
@@ -32,9 +51,6 @@ const tableColumns = [{
 }, {
   key: "bind",
   label: "Bound Port",
-}, {
-  key: "targets",
-  label: "Targets",
 }, {
   key: "proxy_protocol",
   label: "Proxy Protocol",
@@ -57,6 +73,7 @@ const protocol: Record<string, string> = {
   https: "HTTPS",
   secure: "Secure",
   securex: "SecureX",
+  tls: "TLS",
 }
 const proxyProtocol: Record<number, string> = {
   0: "关闭",
@@ -73,6 +90,13 @@ const actions = (row: RuleData) => [
       edit.value = true
       slideIsOpen.value = true
       state.value = structuredClone(toRaw(row))
+      editingId.value = row.id
+      if (!state.value.conf) {
+        state.value.conf = {}
+      }
+      if (!state.value.targets) {
+        state.value.targets = []
+      }
     },
   }, {
     label: "Delete",
@@ -91,25 +115,8 @@ const actions = (row: RuleData) => [
       loading.value = false
     },
   }]]
-const selected = ref<RuleData[]>([])
-
-const slideIsOpen = ref(false)
 
 const nodeData = ref<ForwardNodeData[]>()
-
-async function fetchAll(query?: QueryParams) {
-  loading.value = true
-  await pfClient.forwardRule.getRuleList(query).then((rps) => {
-    if (rps.Ok) {
-      tableRowData.value = rps.Data!
-    }
-    else {
-      tableRowData.value = []
-      toast.add({ title: "Unable to load data", description: rps.Msg, color: "red" }) // TODO: i18n
-    }
-  })
-  loading.value = false
-}
 
 const filters = computed(() => (tableColumns.filter(item => item.label !== undefined).reduce((record, {
   key,
@@ -125,10 +132,12 @@ const filters = computed(() => (tableColumns.filter(item => item.label !== undef
     record["proxy"] = { label: label, select: proxyProtocol }
   }
   else if (nodeData.value !== undefined && key === "node_id") {
-    record[key] = { label: label, select: nodeData.value.reduce((record, { id, name }) => {
-      record[id] = name
-      return record
-    }, {} as Record<number, string>) }
+    record[key] = {
+      label: label, select: nodeData.value.reduce((record, { id, name }) => {
+        record[id] = name
+        return record
+      }, {} as Record<number, string>),
+    }
   }
   else {
     record[key] = { label: label }
@@ -136,29 +145,93 @@ const filters = computed(() => (tableColumns.filter(item => item.label !== undef
   return record
 }, {} as Record<string, Filter>)))
 
+const slideIsOpen = ref(false)
 const schema = z.object({
-  node_id: z.number(),
   name: z.string(),
+  node_id: z.number(),
   mode: z.number(),
   protocol: z.string(),
-  bind: z.number(),
+  bind: z.string().default(""),
+  targets: z.array(z.object({
+    Host: z.string(),
+    Port: z.number(),
+  })).default([]),
   proxy_protocol: z.number(),
+  conf: z.record(z.string(), z.string()),
+  outbound: z.string().default(""),
+  dest_device: z.number().optional(),
 })
 
 type Schema = z.output<typeof schema>
 
-const state = ref({} as RuleData)
-
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  console.log(event.data)
+  slideIsOpen.value = false
+  if (edit.value) {
+    await pfClient.forwardRule.modify(editingId.value, event.data).then((rps) => {
+      if (rps.Ok) {
+        toast.add({ title: "Modify successfully" })
+      }
+      else {
+        toast.add({ title: "Modify unsuccessfully", description: rps.Msg, color: "red" })
+      }
+    })
+  }
+  else {
+    await pfClient.forwardRule.add(event.data).then((rps) => {
+      if (rps.Ok) {
+        toast.add({ title: "Add successfully" })
+      }
+      else {
+        toast.add({ title: "Add unsuccessfully", description: rps.Msg, color: "red" })
+      }
+    })
+  }
+  await fetchAll()
 }
+
+const node = computed(() => {
+  return nodeData.value?.findLast((item) => {
+    return item.id === state.value.node_id // TODO: nuxt/ui #1897
+  })
+})
+const nodeHelp = computed(() => {
+  if (!nodeData.value) {
+    return ""
+  }
+  return node.value ? `${node.value.speed}x Speed ${node.value.traffic}x Traffic` : ""
+})
+const nodeProtocol = computed(() => {
+  if (node.value) {
+    return node.value.protocol.split("|").map(item => ({ name: protocol[item], value: item }))
+  }
+  return Object.entries(protocol).map(([key, label]) => ({ name: label, value: key }))
+})
+
+function onAddTarget() {
+  if (state.value.targets) {
+    const target = {} as RuleTarget
+    state.value.targets.push(target)
+  }
+  else {
+    state.value.targets = []
+    onAddTarget()
+  }
+}
+
+function onDeleteTarget(index: number) {
+  state.value.targets.splice(index, 1)
+}
+
+const pendingConfKey = ref("")
+const configs = computed(() => {
+  return Object.entries(state.value.conf).map(([key, value]) => ({ key, value }))
+})
 
 onMounted(async () => {
   await fetchAll()
   await pfClient.node.getForwardNodes().then((rps) => {
     if (rps.Ok) {
       nodeData.value = rps.Data
-      console.log(nodeData.value)
     }
     else {
       toast.add({ title: "Unable to load node data", description: rps.Msg, color: "red" })
@@ -175,7 +248,7 @@ onMounted(async () => {
         @click="() => {
           edit = false
           slideIsOpen = true
-          state = {} as RuleData
+          state = { conf: {} } as PendingRuleData
         }"
       />
     </div>
@@ -185,9 +258,9 @@ onMounted(async () => {
     />
     <RTable
       v-model="selected"
-      :row-data="tableRowData"
       :columns="tableColumns"
       :loading="loading"
+      :row-data="tableRowData"
     >
       <template #node_id-data="{ row }">
         <div v-if="nodeData === undefined">
@@ -218,8 +291,8 @@ onMounted(async () => {
         <UDropdown :items="actions(row)">
           <UButton
             color="gray"
-            variant="ghost"
             icon="i-tabler-dots"
+            variant="ghost"
           />
         </UDropdown>
       </template>
@@ -232,19 +305,146 @@ onMounted(async () => {
         @submit="onSubmit"
       >
         <div v-if="edit">
-          ID: {{ state.id }}
+          ID: {{ editingId }}
         </div>
         <UDivider v-if="edit" />
+        <UFormGroup
+          label="Name"
+          name="name"
+        >
+          <UInput
+            v-model="state.name"
+          />
+        </UFormGroup>
+        <UFormGroup
+          :help="nodeHelp"
+          label="Node"
+          name="node_id"
+        >
+          <USelect
+            v-model.number="state.node_id"
+            :options="nodeData?.map(item => ({ name: item.name, value: item.id }))"
+            option-attribute="name"
+          />
+        </UFormGroup>
         <UFormGroup
           label="Protocol"
           name="protocol"
         >
           <USelect
             v-model="state.protocol"
-            :options="Object.entries(protocol).map(([key, label]) => ({ name: label, value: key }))"
+            :disabled="node === undefined"
+            :options="nodeProtocol"
             option-attribute="name"
           />
         </UFormGroup>
+        <UFormGroup
+          label="Bound Port"
+          name="bind"
+        >
+          <UInput
+            v-model="state.bind"
+            placeholder="Leave empty to auto assign"
+          />
+        </UFormGroup>
+        <UDivider />
+        <UFormGroup
+          label="Mode"
+          name="mode"
+        >
+          <USelect
+            v-model.number="state.mode"
+            :options="Object.entries(mode).map(([key, label]) => ({ name: label, value: key }))"
+            option-attribute="name"
+          />
+        </UFormGroup>
+        <UFormGroup
+          label="Targets"
+          name="targets"
+        >
+          <UButtonGroup
+            v-for="(target, index) in state.targets"
+            :key="`${index}-${Math.random()}`"
+            class="pb-2"
+            orientation="horizontal"
+          >
+            <UInput
+              v-model="target.Host"
+              placeholder="Host"
+            />
+            <UInput
+              v-model="target.Port"
+              placeholder="Port"
+              type="number"
+            />
+            <UButton
+              icon="i-tabler-trash"
+              @click="onDeleteTarget(index)"
+            />
+          </UButtonGroup>
+          <UButton
+            icon="i-tabler-plus"
+            label="Add"
+            @click="onAddTarget"
+          />
+        </UFormGroup>
+        <UDivider label="Advanced" />
+        <UFormGroup
+          label="Proxy Protocol"
+          name="proxy_protocol"
+        >
+          <USelect
+            v-model.number="state.proxy_protocol"
+            :options="Object.entries(proxyProtocol).map(([key, label]) => ({ name: label, value: key }))"
+            option-attribute="name"
+          />
+        </UFormGroup>
+        <UFormGroup
+          label="Config"
+          name="conf"
+        >
+          <UButtonGroup
+            v-for="conf in configs"
+            :key="conf.key"
+            class="pb-2"
+            orientation="horizontal"
+          >
+            <UInput
+              v-model="conf.key"
+              disabled
+            />
+            <UInput
+              v-model="state.conf[conf.key]"
+              placeholder="Value"
+            />
+            <UButton
+              icon="i-tabler-trash"
+              @click="delete state.conf[conf.key]"
+            />
+          </UButtonGroup>
+          <UFormGroup :error="(state.conf[pendingConfKey] !== undefined) && 'Config already exist'">
+            <UButtonGroup>
+              <UInput
+                v-model="pendingConfKey"
+                placeholder="Key"
+              />
+              <UButton
+                icon="i-tabler-plus"
+                label="Add"
+                :disabled="state.conf[pendingConfKey] !== undefined"
+                @click="() => {
+                  state.conf[pendingConfKey] = ''
+                  pendingConfKey = ''
+                }"
+              />
+            </UButtonGroup>
+          </UFormGroup>
+        </UFormGroup>
+        <UDivider />
+        <UButton
+          label="Submit"
+          type="submit"
+        />
       </UForm>
     </RSlideover>
   </div>

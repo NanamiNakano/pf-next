@@ -4,10 +4,10 @@ const props = defineProps<{
 }>()
 
 const color = computed(() => {
-  if (props.status === "Exhaust" || props.status === "Error" || props.status === "Disabled") {
+  if (props.status === "Exhaust" || props.status === "Error" || props.status === "Suspend" || props.status === "Banned") {
     return "red"
   }
-  else if (props.status === "Suspend" || props.status === "Sync") {
+  else if (props.status === "Disabled" || props.status === "Sync") {
     return "amber"
   }
   else {
