@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { z } from "zod"
 import type { FormSubmitEvent } from "#ui/types"
 
@@ -113,29 +113,24 @@ onMounted(async () => {
 
       <UFormGroup
         :label="$t('text.signup.refererCode')"
-        name="refererCode"
         :required="siteSetting.siteSetting.register_invite === 'true'"
+        name="refererCode"
       >
         <UInput v-model="state.refererCode" />
       </UFormGroup>
-
-      <div class="flex justify-between items-center">
-        <UButton
-          type="submit"
-          :loading="registering"
-        >
-          {{ $t("text.signup.submit") }}
-        </UButton>
-        <div class="flex items-center">
-          <p class="text-gray-400 px-2">
-            {{ $t("text.signup.hasAccount") }}
-          </p>
-          <UButton
-            :label="$t('text.signup.login')"
-            @click="navigateTo('/login')"
-          />
-        </div>
-      </div>
+      <UButton
+        :loading="registering"
+        block
+        type="submit"
+      >
+        {{ $t("text.signup.submit") }}
+      </UButton>
+      <UDivider :label="$t('text.signup.hasAccount')" />
+      <UButton
+        :label="$t('text.signup.login')"
+        @click="navigateTo('/login')"
+        block
+      />
     </UForm>
   </div>
 </template>

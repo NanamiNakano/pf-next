@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { z } from "zod"
 import type { FormSubmitEvent } from "#ui/types"
 
@@ -30,7 +30,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   logging.value = true
   await pfClient.auth.login(event.data.username, event.data.password).then(async (rps) => {
     if (rps.Ok) {
-      toast.add({ title: t("text.login.toast.login.ok.title"), timeout: 2000, callback: async () => await navigateTo("/") })
+      toast.add({
+        title: t("text.login.toast.login.ok.title"),
+        timeout: 2000,
+        callback: async () => await navigateTo("/"),
+      })
       loggedIn.value = true
       userData.fetch()
     }
@@ -86,28 +90,20 @@ onMounted(async () => {
           type="password"
         />
       </UFormGroup>
-
-      <div class="flex justify-between items-center">
-        <UButton
-          type="submit"
-          :loading="logging"
-        >
-          {{ $t("text.login.submit") }}
-        </UButton>
-        <div class="flex items-center">
-          <p
-            v-if="siteSetting.siteSetting.register === 'true'"
-            class="text-gray-400 px-2"
-          >
-            {{ $t("text.login.noAccount") }}
-          </p>
-          <UButton
-            v-if="siteSetting.siteSetting.register === 'true'"
-            :label="$t('text.login.signup')"
-            @click="navigateTo('/signup')"
-          />
-        </div>
-      </div>
+      <UButton
+        :loading="logging"
+        block
+        type="submit"
+      >
+        {{ $t("text.login.submit") }}
+      </UButton>
+      <UDivider v-if="siteSetting.siteSetting.register === 'true'" :label=" $t('text.login.noAccount')" />
+      <UButton
+        v-if="siteSetting.siteSetting.register === 'true'"
+        :label="$t('text.login.signup')"
+        @click="navigateTo('/signup')"
+        block
+      />
     </UForm>
     <UContainer
       v-else
@@ -119,8 +115,8 @@ onMounted(async () => {
       <div class="flex justify-around items-center">
         <div class="flex space-x-2 items-center">
           <TablerIcon
-            name="user-circle"
             class="w-16 h-16"
+            name="user-circle"
           />
           <div
             v-if="userData.userData.name"
@@ -144,8 +140,8 @@ onMounted(async () => {
           @click="logout"
         >
           <TablerIcon
-            name="logout"
             class="w-6 h-6"
+            name="logout"
           />
         </UButton>
       </div>
