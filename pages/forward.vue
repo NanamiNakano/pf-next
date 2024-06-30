@@ -3,7 +3,6 @@ import type { ForwardNodeData, PendingRuleData, QueryParams, RuleData, RuleTarge
 import { z } from "zod"
 import type { Filter } from "~/types/commons"
 import type { FormSubmitEvent } from "#ui/types"
-import RSlideover from "~/components/RSlideover.vue"
 
 const pfClient = usePfClient()
 const toast = useToast()
@@ -50,7 +49,7 @@ const tableColumns = [{
   label: "Protocol",
 }, {
   key: "bind",
-  label: "Bound Port",
+  label: "Listen Port",
 }, {
   key: "proxy_protocol",
   label: "Proxy Protocol",
@@ -88,7 +87,7 @@ const actions = (row: RuleData) => [
     icon: "i-tabler-pencil",
     click: () => {
       edit.value = true
-      slideIsOpen.value = true
+      modalIsOpen.value = true
       state.value = structuredClone(toRaw(row))
       editingId.value = row.id
       if (!state.value.conf) {
@@ -147,7 +146,7 @@ const actions = (row: RuleData) => [
         }
       })
       loading.value = false
-    }
+    },
   }]]
 
 const nodeData = ref<ForwardNodeData[]>()
@@ -179,7 +178,7 @@ const filters = computed(() => (tableColumns.filter(item => item.label !== undef
   return record
 }, {} as Record<string, Filter>)))
 
-const slideIsOpen = ref(false)
+const modalIsOpen = ref(false)
 const schema = z.object({
   name: z.string(),
   node_id: z.number(),
@@ -199,7 +198,7 @@ const schema = z.object({
 type Schema = z.output<typeof schema>
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  slideIsOpen.value = false
+  modalIsOpen.value = false
   if (edit.value) {
     await pfClient.forwardRule.modify(editingId.value, event.data).then((rps) => {
       if (rps.Ok) {
@@ -232,7 +231,7 @@ const nodeHelp = computed(() => {
   if (!nodeData.value) {
     return ""
   }
-  return node.value ? `${node.value.speed}x Speed ${node.value.traffic}x Traffic` : ""
+  return node.value ? `#${node.value.id}: ${node.value.speed}x Speed ${node.value.traffic}x Traffic` : ""
 })
 const nodeProtocol = computed(() => {
   if (node.value) {
@@ -281,7 +280,7 @@ onMounted(async () => {
         label="New"
         @click="() => {
           edit = false
-          slideIsOpen = true
+          modalIsOpen = true
           state = { conf: {} } as PendingRuleData
         }"
       />
@@ -331,155 +330,178 @@ onMounted(async () => {
         </UDropdown>
       </template>
     </RTable>
-    <RSlideover v-model="slideIsOpen">
-      <UForm
-        :schema="schema"
-        :state="state"
-        class="space-y-4"
-        @submit="onSubmit"
-      >
-        <div v-if="edit">
-          ID: {{ editingId }}
-        </div>
-        <UDivider v-if="edit" />
-        <UFormGroup
-          label="Name"
-          name="name"
+    <UModal v-model="modalIsOpen">
+      <UCard>
+        <template #header>
+          <div class="flex justify-between items-center">
+            <div v-if="edit">
+              ID: {{ editingId }}
+            </div>
+            <div v-else>
+              New
+            </div>
+            <UButton
+              icon="i-tabler-x"
+              @click="modalIsOpen = false"
+            />
+          </div>
+        </template>
+        <UForm
+          :schema="schema"
+          :state="state"
+          class="space-y-4"
+          @submit="onSubmit"
         >
-          <UInput
-            v-model="state.name"
-          />
-        </UFormGroup>
-        <UFormGroup
-          :help="nodeHelp"
-          label="Node"
-          name="node_id"
-        >
-          <USelect
-            v-model.number="state.node_id"
-            :options="nodeData?.map(item => ({ name: item.name, value: item.id }))"
-            option-attribute="name"
-          />
-        </UFormGroup>
-        <UFormGroup
-          label="Protocol"
-          name="protocol"
-        >
-          <USelect
-            v-model="state.protocol"
-            :disabled="node === undefined"
-            :options="nodeProtocol"
-            option-attribute="name"
-          />
-        </UFormGroup>
-        <UFormGroup
-          label="Bound Port"
-          name="bind"
-        >
-          <UInput
-            v-model="state.bind"
-            placeholder="Leave empty to auto assign"
-          />
-        </UFormGroup>
-        <UDivider />
-        <UFormGroup
-          label="Mode"
-          name="mode"
-        >
-          <USelect
-            v-model.number="state.mode"
-            :options="Object.entries(mode).map(([key, label]) => ({ name: label, value: key }))"
-            option-attribute="name"
-          />
-        </UFormGroup>
-        <UFormGroup
-          label="Targets"
-          name="targets"
-        >
-          <UButtonGroup
-            v-for="(target, index) in state.targets"
-            :key="`${index}-${Math.random()}`"
-            class="pb-2"
-            orientation="horizontal"
+          <UFormGroup
+            label="Name"
+            name="name"
           >
             <UInput
-              v-model="target.Host"
-              placeholder="Host"
+              v-model="state.name"
             />
-            <UInput
-              v-model="target.Port"
-              placeholder="Port"
-              type="number"
+          </UFormGroup>
+          <UFormGroup
+            :help="nodeHelp"
+            label="Node"
+            name="node_id"
+          >
+            <USelect
+              v-model.number="state.node_id"
+              :options="nodeData?.map(item => ({ name: item.name, value: item.id }))"
+              option-attribute="name"
             />
-            <UButton
-              icon="i-tabler-trash"
-              @click="onDeleteTarget(index)"
+          </UFormGroup>
+          <UFormGroup
+            label="Protocol"
+            name="protocol"
+          >
+            <USelect
+              v-model="state.protocol"
+              :disabled="node === undefined"
+              :options="nodeProtocol"
+              option-attribute="name"
             />
-          </UButtonGroup>
-          <UButton
-            icon="i-tabler-plus"
-            label="Add"
-            @click="onAddTarget"
-          />
-        </UFormGroup>
-        <UDivider label="Advanced" />
-        <UFormGroup
-          label="Proxy Protocol"
-          name="proxy_protocol"
-        >
-          <USelect
-            v-model.number="state.proxy_protocol"
-            :options="Object.entries(proxyProtocol).map(([key, label]) => ({ name: label, value: key }))"
-            option-attribute="name"
-          />
-        </UFormGroup>
-        <UFormGroup
-          label="Config"
-          name="conf"
-        >
-          <UButtonGroup
-            v-for="conf in configs"
-            :key="conf.key"
-            class="pb-2"
-            orientation="horizontal"
+          </UFormGroup>
+          <UFormGroup
+            label="Listen Port"
+            name="bind"
           >
             <UInput
-              v-model="conf.key"
-              disabled
+              v-model="state.bind"
+              placeholder="Leave empty to auto assign"
             />
-            <UInput
-              v-model="state.conf[conf.key]"
-              placeholder="Value"
+          </UFormGroup>
+          <UDivider />
+          <UFormGroup
+            label="Mode"
+            name="mode"
+          >
+            <USelect
+              v-model.number="state.mode"
+              :options="Object.entries(mode).map(([key, label]) => ({ name: label, value: key }))"
+              option-attribute="name"
             />
-            <UButton
-              icon="i-tabler-trash"
-              @click="delete state.conf[conf.key]"
+          </UFormGroup>
+          <UFormGroup
+            label="Targets"
+            name="targets"
+          >
+            <div class="flex flex-col space-y-2">
+              <div v-for="(target, index) in state.targets"
+                   :key="`${index}-${Math.random()}`"
+                   class="flex-none"
+              >
+                <UButtonGroup
+                  orientation="horizontal"
+                >
+                  <UInput
+                    v-model="target.Host"
+                    placeholder="Host"
+                  />
+                  <UInput
+                    v-model="target.Port"
+                    placeholder="Port"
+                    type="number"
+                  />
+                  <UButton
+                    icon="i-tabler-trash"
+                    @click="onDeleteTarget(index)"
+                  />
+                </UButtonGroup>
+              </div>
+              <div>
+                <UButton
+                  icon="i-tabler-plus"
+                  label="Add"
+                  @click="onAddTarget"
+                  class="flex-none"
+                />
+              </div>
+            </div>
+          </UFormGroup>
+          <UDivider label="Advanced" />
+          <UFormGroup
+            label="Proxy Protocol"
+            name="proxy_protocol"
+          >
+            <USelect
+              v-model.number="state.proxy_protocol"
+              :options="Object.entries(proxyProtocol).map(([key, label]) => ({ name: label, value: key }))"
+              option-attribute="name"
             />
-          </UButtonGroup>
-          <UFormGroup :error="(state.conf[pendingConfKey] !== undefined) && 'Config already exist'">
-            <UButtonGroup>
-              <UInput
-                v-model="pendingConfKey"
-                placeholder="Key"
-              />
-              <UButton
-                :disabled="state.conf[pendingConfKey] !== undefined"
-                icon="i-tabler-plus"
-                label="Add"
-                @click="() => {
+          </UFormGroup>
+          <UFormGroup
+            label="Config"
+            name="conf"
+          >
+            <div class="flex flex-col space-y-2">
+              <div v-for="conf in configs"
+                   :key="conf.key"
+                   class="flex-none"
+              >
+                <UButtonGroup
+                  orientation="horizontal"
+                >
+                  <UInput
+                    v-model="conf.key"
+                    disabled
+                  />
+                  <UInput
+                    v-model="state.conf[conf.key]"
+                    placeholder="Value"
+                  />
+                  <UButton
+                    icon="i-tabler-trash"
+                    @click="delete state.conf[conf.key]"
+                  />
+                </UButtonGroup>
+              </div>
+              <UFormGroup :error="(state.conf[pendingConfKey] !== undefined) && 'Config already exist'">
+                <UButtonGroup>
+                  <UInput
+                    v-model="pendingConfKey"
+                    placeholder="Key"
+                  />
+                  <UButton
+                    :disabled="state.conf[pendingConfKey] !== undefined"
+                    icon="i-tabler-plus"
+                    label="Add"
+                    @click="() => {
                   state.conf[pendingConfKey] = ''
                   pendingConfKey = ''
                 }"
-              />
-            </UButtonGroup>
+                  />
+                </UButtonGroup>
+              </UFormGroup>
+            </div>
           </UFormGroup>
-        </UFormGroup>
-        <UDivider />
-        <UButton
-          label="Submit"
-          type="submit"
-        />
-      </UForm>
-    </RSlideover>
+          <UDivider />
+          <UButton
+            label="Submit"
+            type="submit"
+          />
+        </UForm>
+      </Ucard>
+    </UModal>
   </div>
 </template>
