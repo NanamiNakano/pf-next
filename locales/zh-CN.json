@@ -82,6 +82,28 @@
       "collapse": "折叠",
       "expand": "展开"
     },
+    "rule": {
+      "advanced": "高级设置",
+      "config": "配置项",
+      "listeningPort": "监听端口",
+      "mode": "模式",
+      "name": "名称",
+      "node": "节点",
+      "placeholder": {
+        "empty": "留空以自动分配",
+        "configExist": "同键名的配置项已存在",
+        "value": "值",
+        "host": "主机",
+        "port": "端口",
+        "key": "键"
+      },
+      "protocol": "协议",
+      "proxyProtocol": "代理协议",
+      "status": "状态",
+      "targets": "目标",
+      "userId": "用户 ID",
+      "device": "设备"
+    },
     "signup": {
       "confirmPassword": "确认密码",
       "hasAccount": "已有账号？",
@@ -117,5 +139,16 @@
     "/login": "登入",
     "/nat": "内网穿透",
     "/signup": "注册"
+  },
+  "verb": {
+    "add": "添加",
+    "delete": "删除",
+    "diagnose": "诊断",
+    "disable": "禁用",
+    "edit": "编辑",
+    "enable": "启用",
+    "new": "新建",
+    "restart": "重启",
+    "submit": "提交"
   }
 }

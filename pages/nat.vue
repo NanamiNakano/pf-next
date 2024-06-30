@@ -12,6 +12,7 @@ import type { FormSubmitEvent } from "#ui/types"
 
 const pfClient = usePfClient()
 const toast = useToast()
+const { t } = useI18n()
 
 const loading = ref(true)
 const edit = ref(true)
@@ -35,36 +36,36 @@ async function fetchAll(query?: QueryParams) {
   loading.value = false
 }
 
-const tableColumns = [{
+const tableColumns = computed(() => [{
   key: "id",
   label: "ID",
 }, {
   key: "name",
-  label: "Name",
+  label: t("text.rule.name"),
 }, {
   key: "user_id",
-  label: "User ID",
+  label: t("text.rule.userId"),
 }, {
   key: "node_id",
-  label: "Node",
+  label: t("text.rule.node"),
 }, {
   key: "mode",
-  label: "Mode",
+  label: t("text.rule.node"),
 }, {
   key: "protocol",
-  label: "Protocol",
+  label: t("text.rule.protocol"),
 }, {
   key: "bind",
-  label: "Listen Port",
+  label: t("text.rule.listeningPort"),
 }, {
   key: "proxy_protocol",
-  label: "Proxy Protocol",
+  label: t("text.rule.proxyProtocol"),
 }, {
   key: "status",
-  label: "Status",
+  label: t("text.rule.status"),
 }, {
   key: "actions",
-}]
+}])
 
 const mode: Record<number, string> = { // TODO: i18n
   0: "单转发",
@@ -88,9 +89,9 @@ const diagnoseModalIsOpen = ref(false)
 const diagnosing = ref(false)
 const diagnoseData = ref({} as RuleDebugResponse)
 
-const actions = (row: RuleData) => [
+const actions = (row: RuleData) => computed(() => [
   [{
-    label: "Edit",
+    label: t("verb.edit"),
     icon: "i-tabler-pencil",
     click: () => {
       edit.value = true
@@ -105,7 +106,7 @@ const actions = (row: RuleData) => [
       }
     },
   }], [{
-    label: "Delete",
+    label: t("verb.delete"),
     icon: "i-tabler-trash",
     click: async () => {
       loading.value = true
@@ -121,7 +122,7 @@ const actions = (row: RuleData) => [
       loading.value = false
     },
   }, {
-    label: "Disable",
+    label: t("verb.delete"),
     icon: "i-tabler-circle-off",
     disabled: row.status === "Disabled",
     click: async () => {
@@ -138,7 +139,7 @@ const actions = (row: RuleData) => [
       loading.value = false
     },
   }, {
-    label: "Enable",
+    label: t("verb.enable"),
     icon: "i-tabler-player-play",
     disabled: row.status !== "Disabled",
     click: async () => {
@@ -155,7 +156,7 @@ const actions = (row: RuleData) => [
       loading.value = false
     },
   }, {
-    label: "Restart",
+    label: t("verb.restart"),
     icon: "i-tabler-reload",
     click: async () => {
       loading.value = true
@@ -171,7 +172,7 @@ const actions = (row: RuleData) => [
       loading.value = false
     },
   }], [{
-    label: "Diagnose",
+    label: t("verb.diagnose"),
     icon: "i-tabler-bug",
     click: async () => {
       diagnosing.value = true
@@ -187,12 +188,12 @@ const actions = (row: RuleData) => [
       })
       diagnosing.value = false
     },
-  }]]
+  }]])
 
 const nodeData = ref<ForwardNodeData[]>()
 const deviceData = ref<NatDeviceData[]>()
 
-const filters = computed(() => (tableColumns.filter(item => item.label !== undefined).reduce((record, {
+const filters = computed(() => (tableColumns.value.filter(item => item.label !== undefined).reduce((record, {
   key,
   label,
 }) => {
@@ -382,7 +383,7 @@ onMounted(async () => {
   <div class="flex flex-col space-y-2">
     <div class="flex space-x-2">
       <UButton
-        label="New"
+        :label="t('verb.new')"
         @click="() => {
           edit = false
           modalIsOpen = true
@@ -392,26 +393,26 @@ onMounted(async () => {
       <UButtonGroup>
         <UButton
           :disabled="selected.length <= 0"
+          :label="t('verb.delete')"
           color="red"
-          label="Delete"
           variant="outline"
           @click="handleDelete"
         />
         <UButton
           :disabled="selected.length <= 0"
-          label="Disable"
+          :label="t('verb.disable')"
           variant="outline"
           @click="handleDisable"
         />
         <UButton
           :disabled="selected.length <= 0"
-          label="Enable"
+          :label="t('verb.enable')"
           variant="outline"
           @click="handleEnable"
         />
         <UButton
           :disabled="selected.length <= 0"
-          label="Restart"
+          :label="t('verb.restart')"
           variant="outline"
           @click="handleRestart"
         />
@@ -453,7 +454,7 @@ onMounted(async () => {
       </template>
 
       <template #actions-data="{ row }">
-        <UDropdown :items="actions(row)">
+        <UDropdown :items="actions(row).value">
           <UButton
             color="gray"
             icon="i-tabler-dots"
@@ -470,7 +471,7 @@ onMounted(async () => {
               ID: {{ editingId }}
             </div>
             <div v-else>
-              New
+              {{ $t("verb.new") }}
             </div>
             <UButton
               icon="i-tabler-x"
@@ -485,7 +486,7 @@ onMounted(async () => {
           @submit="onSubmit"
         >
           <UFormGroup
-            label="Name"
+            :label="t('text.rule.name')"
             name="name"
           >
             <UInput
@@ -494,7 +495,7 @@ onMounted(async () => {
           </UFormGroup>
           <UFormGroup
             :help="nodeHelp"
-            label="Node"
+            :label="t('text.rule.node')"
             name="node_id"
           >
             <USelect
@@ -504,7 +505,7 @@ onMounted(async () => {
             />
           </UFormGroup>
           <UFormGroup
-            label="Protocol"
+            :label="t('text.rule.protocol')"
             name="protocol"
           >
             <USelect
@@ -515,17 +516,17 @@ onMounted(async () => {
             />
           </UFormGroup>
           <UFormGroup
-            label="Listen Port"
+            :label="t('text.rule.listeningPort')"
             name="bind"
           >
             <UInput
               v-model="state.bind"
-              placeholder="Leave empty to auto assign"
+              :placeholder="t('text.rule.placeholder.empty')"
             />
           </UFormGroup>
           <UDivider />
           <UFormGroup
-            label="Target"
+            :label="t('text.rule.targets')"
             name="targets"
           >
             <div
@@ -537,18 +538,18 @@ onMounted(async () => {
               >
                 <UInput
                   v-model="target.Host"
-                  placeholder="Host"
+                  :placeholder="t('text.rule.placeholder.host')"
                 />
                 <UInput
                   v-model="target.Port"
-                  placeholder="Port"
+                  :placeholder="t('text.rule.placeholder.port')"
                   type="number"
                 />
               </UButtonGroup>
             </div>
           </UFormGroup>
           <UFormGroup
-            label="Device"
+            :label="t('text.rule.device')"
             name="dest_device"
           >
             <USelect
@@ -557,9 +558,9 @@ onMounted(async () => {
               option-attribute="name"
             />
           </UFormGroup>
-          <UDivider label="Advanced" />
+          <UDivider :label="t('text.rule.advanced')" />
           <UFormGroup
-            label="Proxy Protocol"
+            :label="t('text.rule.proxyProtocol')"
             name="proxy_protocol"
           >
             <USelect
@@ -569,7 +570,7 @@ onMounted(async () => {
             />
           </UFormGroup>
           <UFormGroup
-            label="Config"
+            :label="t('text.rule.config')"
             name="conf"
           >
             <div class="flex flex-col space-y-2">
@@ -587,7 +588,7 @@ onMounted(async () => {
                   />
                   <UInput
                     v-model="state.conf[conf.key]"
-                    placeholder="Value"
+                    :placeholder="t('text.rule.placeholder.value')"
                   />
                   <UButton
                     icon="i-tabler-trash"
@@ -595,16 +596,16 @@ onMounted(async () => {
                   />
                 </UButtonGroup>
               </div>
-              <UFormGroup :error="(state.conf[pendingConfKey] !== undefined) && 'Config already exist'">
+              <UFormGroup :error="(state.conf[pendingConfKey] !== undefined) && t('text.rule.placeholder.configExist')">
                 <UButtonGroup>
                   <UInput
+                    :key="t('text.rule.placeholder.key')"
                     v-model="pendingConfKey"
-                    placeholder="Key"
                   />
                   <UButton
                     :disabled="state.conf[pendingConfKey] !== undefined"
                     icon="i-tabler-plus"
-                    label="Add"
+                    :label="t('verb.add')"
                     @click="() => {
                       state.conf[pendingConfKey] = ''
                       pendingConfKey = ''
@@ -616,7 +617,7 @@ onMounted(async () => {
           </UFormGroup>
           <UDivider />
           <UButton
-            label="Submit"
+            :label="t('verb.submit')"
             type="submit"
           />
         </UForm>
@@ -627,7 +628,7 @@ onMounted(async () => {
         <template #header>
           <div class="flex justify-between items-center">
             <div>
-              Diagnose
+              {{ $t("verb.diagnose") }}
             </div>
             <UButton
               icon="i-tabler-x"
@@ -649,3 +650,4 @@ onMounted(async () => {
     </UModal>
   </div>
 </template>
+`

@@ -82,6 +82,28 @@
       "collapse": "Collapse",
       "expand": "Expand"
     },
+    "rule": {
+      "advanced": "Advanced",
+      "config": "Config",
+      "listeningPort": "Listening Port",
+      "mode": "Mode",
+      "name": "Name",
+      "node": "Node",
+      "placeholder": {
+        "empty": "Leave empty to auto assign",
+        "configExist": "Config item with the same key alreay exist",
+        "value": "Value",
+        "host": "Host",
+        "port": "Port",
+        "key": "Key"
+      },
+      "protocol": "Protocol",
+      "proxyProtocol": "Proxy Protocol",
+      "status": "Status",
+      "targets": "Targets",
+      "userId": "User ID",
+      "device": "Device"
+    },
     "signup": {
       "confirmPassword": "Confirm Password",
       "hasAccount": "Already have an account?",
@@ -117,5 +139,16 @@
     "/login": "Sign in",
     "/nat": "Bypassing NAT Rule",
     "/signup": "Sign up"
+  },
+  "verb": {
+    "add": "Add",
+    "delete": "Delete",
+    "diagnose": "Diagnose",
+    "disable": "Disable",
+    "edit": "Edit",
+    "enable": "Enable",
+    "new": "New",
+    "restart": "Restart",
+    "submit": "Submit"
   }
 }
