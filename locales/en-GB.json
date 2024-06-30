@@ -115,6 +115,7 @@
     "/": "Home",
     "/forward": "Forward Rule",
     "/login": "Sign in",
+    "/nat": "Bypassing NAT Rule",
     "/signup": "Sign up"
   }
 }

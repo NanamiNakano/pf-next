@@ -15,6 +15,10 @@ const links = computed(() => [
     label: t("title./forward"),
     icon: "i-tabler-polygon",
     to: "/forward",
+  }, {
+    label: t("title./nat"),
+    icon: "i-tabler-route-2",
+    to: "/nat",
   }],
 ])
 </script>
