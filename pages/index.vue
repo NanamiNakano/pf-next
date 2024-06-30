@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import markdownit from "markdown-it"
 
 const userData = useUserDataStore()
@@ -6,7 +6,7 @@ const announcement = useAnnouncementStore()
 const loadingAnnouncement = ref(true)
 const showAnnouncementModel = ref(false)
 const readAnnouncement = ref(0)
-const announcementPage = ref(1)
+const announcementPage = ref(0)
 const md = markdownit()
 
 onMounted(async () => {
@@ -37,6 +37,13 @@ async function reloadAnnouncement() {
   await announcement.fetchAll()
   loadingAnnouncement.value = false
 }
+
+function openAnnouncement() {
+  if (announcementPage.value === 0) {
+    announcementPage.value = 1
+  }
+  showAnnouncementModel.value = true
+}
 </script>
 
 <template>
@@ -52,8 +59,8 @@ async function reloadAnnouncement() {
             {{ $t("text.index.latestAnnouncement") }}
           </h2>
           <UButton
-            :loading="loadingAnnouncement"
             :label="$t('text.index.reload')"
+            :loading="loadingAnnouncement"
             @click="reloadAnnouncement"
           />
         </div>
@@ -86,7 +93,7 @@ async function reloadAnnouncement() {
       >
         <UButton
           :label="$t('text.index.readAll')"
-          @click="showAnnouncementModel = true"
+          @click="openAnnouncement"
         >
           <template #trailing>
             <div class="font-light">
