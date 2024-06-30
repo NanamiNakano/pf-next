@@ -53,16 +53,16 @@ const params = computed(() => {
       v-else
       v-model="search"
     />
-    <UButton
-      :label="$t('r.search.search')"
-      @click="emit('search', params)"
-    />
     <div>{{ $t("r.search.precisely") }}</div>
     <UToggle
       v-model="precisely"
       :disabled="!!props.filters[selectedFilter].select"
       on-icon="i-tabler-check"
       off-icon="i-tabler-x"
+    />
+    <UButton
+      :label="$t('r.search.search')"
+      @click="emit('search', params)"
     />
   </div>
 </template>
