@@ -1,5 +1,12 @@
 <script lang="ts" setup>
-import type { ForwardNodeData, PendingRuleData, QueryParams, RuleData, RuleTarget } from "@nanaminakano/pfsdk"
+import type {
+  ForwardNodeData,
+  PendingRuleData,
+  QueryParams,
+  RuleData,
+  RuleDebugResponse,
+  RuleTarget,
+} from "@nanaminakano/pfsdk"
 import { z } from "zod"
 import type { Filter } from "~/types/commons"
 import type { FormSubmitEvent } from "#ui/types"
@@ -81,6 +88,10 @@ const proxyProtocol: Record<number, string> = {
   255: "RProxy",
 }
 
+const diagnoseModalIsOpen = ref(false)
+const diagnosing = ref(false)
+const diagnoseData = ref({} as RuleDebugResponse)
+
 const actions = (row: RuleData) => [
   [{
     label: "Edit",
@@ -97,7 +108,7 @@ const actions = (row: RuleData) => [
         state.value.targets = []
       }
     },
-  }, {
+  }], [{
     label: "Delete",
     icon: "i-tabler-trash",
     click: async () => {
@@ -146,6 +157,39 @@ const actions = (row: RuleData) => [
         }
       })
       loading.value = false
+    },
+  }, {
+    label: "Restart",
+    icon: "i-tabler-reload",
+    click: async () => {
+      loading.value = true
+      await pfClient.forwardRule.restart(row.id).then(async (rps) => {
+        if (rps.Ok) {
+          toast.add({ title: "Restart successfully" })
+          await fetchAll()
+        }
+        else {
+          toast.add({ title: "Restart unsuccessfully", description: rps.Msg, color: "red" })
+        }
+      })
+      loading.value = false
+    },
+  }], [{
+    label: "Diagnose",
+    icon: "i-tabler-bug",
+    click: async () => {
+      diagnosing.value = true
+      diagnoseModalIsOpen.value = true
+      await pfClient.forwardRule.debug(row.id).then((rps) => {
+        if (!rps.Ok) {
+          toast.add({ title: "Diagnose unsuccessfully", description: rps.Msg, color: "red" })
+          diagnoseModalIsOpen.value = false
+        }
+        else {
+          diagnoseData.value = rps
+        }
+      })
+      diagnosing.value = false
     },
   }]]
 
@@ -260,6 +304,70 @@ const configs = computed(() => {
   return Object.entries(state.value.conf).map(([key, value]) => ({ key, value }))
 })
 
+async function handleDelete() {
+  loading.value = true
+  for (const item of selected.value) {
+    await pfClient.forwardRule.delete(item.id).then(async (rps) => {
+      if (rps.Ok) {
+        toast.add({ title: `Delete successfully: ${item.name} (ID: ${item.id})` })
+        await fetchAll()
+      }
+      else {
+        toast.add({ title: `Delete unsuccessfully: ${item.name} (ID: ${item.id})`, description: rps.Msg, color: "red" })
+      }
+    })
+  }
+  loading.value = false
+}
+
+async function handleDisable() {
+  loading.value = true
+  for (const item of selected.value) {
+    await pfClient.forwardRule.stop(item.id).then(async (rps) => {
+      if (rps.Ok) {
+        toast.add({ title: `Disable successfully: ${item.name} (ID: ${item.id})` })
+        await fetchAll()
+      }
+      else {
+        toast.add({ title: `Disable unsuccessfully: ${item.name} (ID: ${item.id})`, description: rps.Msg, color: "red" })
+      }
+    })
+  }
+  loading.value = false
+}
+
+async function handleEnable() {
+  loading.value = true
+  for (const item of selected.value) {
+    await pfClient.forwardRule.start(item.id).then(async (rps) => {
+      if (rps.Ok) {
+        toast.add({ title: `Enable successfully: ${item.name} (ID: ${item.id})` })
+        await fetchAll()
+      }
+      else {
+        toast.add({ title: `Enable unsuccessfully: ${item.name} (ID: ${item.id})`, description: rps.Msg, color: "red" })
+      }
+    })
+  }
+  loading.value = false
+}
+
+async function handleRestart() {
+  loading.value = true
+  for (const item of selected.value) {
+    await pfClient.forwardRule.restart(item.id).then(async (rps) => {
+      if (rps.Ok) {
+        toast.add({ title: `Restart successfully: ${item.name} (ID: ${item.id})` })
+        await fetchAll()
+      }
+      else {
+        toast.add({ title: `Restart unsuccessfully: ${item.name} (ID: ${item.id})`, description: rps.Msg, color: "red" })
+      }
+    })
+  }
+  loading.value = false
+}
+
 onMounted(async () => {
   await fetchAll()
   await pfClient.node.getForwardNodes().then((rps) => {
@@ -284,6 +392,33 @@ onMounted(async () => {
           state = { conf: {} } as PendingRuleData
         }"
       />
+      <UButtonGroup>
+        <UButton
+          :disabled="selected.length <= 0"
+          label="Delete"
+          color="red"
+          variant="outline"
+          @click="handleDelete"
+        />
+        <UButton
+          :disabled="selected.length <= 0"
+          label="Disable"
+          variant="outline"
+          @click="handleDisable"
+        />
+        <UButton
+          :disabled="selected.length <= 0"
+          label="Enable"
+          variant="outline"
+          @click="handleEnable"
+        />
+        <UButton
+          :disabled="selected.length <= 0"
+          label="Restart"
+          variant="outline"
+          @click="handleRestart"
+        />
+      </UButtonGroup>
     </div>
     <RSearch
       :filters="filters"
@@ -407,9 +542,10 @@ onMounted(async () => {
             name="targets"
           >
             <div class="flex flex-col space-y-2">
-              <div v-for="(target, index) in state.targets"
-                   :key="`${index}-${Math.random()}`"
-                   class="flex-none"
+              <div
+                v-for="(target, index) in state.targets"
+                :key="`${index}-${Math.random()}`"
+                class="flex-none"
               >
                 <UButtonGroup
                   orientation="horizontal"
@@ -433,8 +569,8 @@ onMounted(async () => {
                 <UButton
                   icon="i-tabler-plus"
                   label="Add"
-                  @click="onAddTarget"
                   class="flex-none"
+                  @click="onAddTarget"
                 />
               </div>
             </div>
@@ -455,9 +591,10 @@ onMounted(async () => {
             name="conf"
           >
             <div class="flex flex-col space-y-2">
-              <div v-for="conf in configs"
-                   :key="conf.key"
-                   class="flex-none"
+              <div
+                v-for="conf in configs"
+                :key="conf.key"
+                class="flex-none"
               >
                 <UButtonGroup
                   orientation="horizontal"
@@ -487,9 +624,9 @@ onMounted(async () => {
                     icon="i-tabler-plus"
                     label="Add"
                     @click="() => {
-                  state.conf[pendingConfKey] = ''
-                  pendingConfKey = ''
-                }"
+                      state.conf[pendingConfKey] = ''
+                      pendingConfKey = ''
+                    }"
                   />
                 </UButtonGroup>
               </UFormGroup>
@@ -502,6 +639,31 @@ onMounted(async () => {
           />
         </UForm>
       </Ucard>
+    </UModal>
+    <UModal v-model="diagnoseModalIsOpen">
+      <UCard>
+        <template #header>
+          <div class="flex justify-between items-center">
+            <div>
+              Diagnose
+            </div>
+            <UButton
+              icon="i-tabler-x"
+              @click="diagnoseModalIsOpen = false; diagnosing = false"
+            />
+          </div>
+        </template>
+        <div
+          v-if="diagnosing"
+          class="flex flex-col space-y-2"
+        >
+          <UProgress animation="carousel" />
+          <div>Diagnosing...</div>
+        </div>
+        <div v-else>
+          Work in Progress
+        </div>
+      </UCard>
     </UModal>
   </div>
 </template>
