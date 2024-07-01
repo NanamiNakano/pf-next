@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 const isCollapsed = ref(false)
 const { t } = useI18n()
 
@@ -19,14 +19,18 @@ const links = computed(() => [
     label: t("title./nat"),
     icon: "i-tabler-route-2",
     to: "/nat",
+  }], [{
+    label: t("title./settings"),
+    icon: "i-tabler-settings",
+    to: "/settings",
   }],
 ])
 </script>
 
 <template>
   <aside
-    class="h-full flex flex-col justify-between overflow-x-hidden border-gray-300 dark:border-gray-600 border-r p-2 transition-[width] ease-in-out"
     :class="`${isCollapsed ? 'w-16' : 'w-56'}`"
+    class="h-full flex flex-col justify-between overflow-x-hidden border-gray-300 dark:border-gray-600 border-r p-2 transition-[width] ease-in-out"
   >
     <UVerticalNavigation
       :links="links"

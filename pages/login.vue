@@ -97,12 +97,15 @@ onMounted(async () => {
       >
         {{ $t("text.login.submit") }}
       </UButton>
-      <UDivider v-if="siteSetting.siteSetting.register === 'true'" :label=" $t('text.login.noAccount')" />
+      <UDivider
+        v-if="siteSetting.siteSetting.register === 'true'"
+        :label=" $t('text.login.noAccount')"
+      />
       <UButton
         v-if="siteSetting.siteSetting.register === 'true'"
         :label="$t('text.login.signup')"
-        @click="navigateTo('/signup')"
         block
+        @click="navigateTo('/signup')"
       />
     </UForm>
     <UContainer

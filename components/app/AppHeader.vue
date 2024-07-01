@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 const siteSetting = useSiteSettingStore()
 const userData = useUserDataStore()
 const toast = useToast()
@@ -22,8 +22,9 @@ const avatarDropdown = computed(() => [
     slot: "account",
     disabled: true,
   }], [{
-    label: t("text.header.info"),
-    icon: "i-tabler-info-square",
+    label: t("text.header.settings"),
+    icon: "i-tabler-settings",
+    click: () => navigateTo("/settings?tab=user"),
   }, {
     label: t("text.header.logout"),
     icon: "i-tabler-logout",
@@ -48,10 +49,10 @@ function toggleMenu() {
       <div class="flex mx-auto justify-between items-center px-8 h-14">
         <div class="flex shrink items-center space-x-2 min-w-11">
           <LazyUButton
+            class="md:hidden"
+            color="gray"
             square
             variant="ghost"
-            color="gray"
-            class="md:hidden"
             @click="toggleMenu"
           >
             <TablerIcon
@@ -68,8 +69,8 @@ function toggleMenu() {
           <LanguageSwitch />
           <UDropdown
             :items="avatarDropdown"
-            :ui="{ item: { disabled: 'cursor-text select-text' } }"
             :popper="{ placement: 'auto' }"
+            :ui="{ item: { disabled: 'cursor-text select-text' } }"
           >
             <UAvatar
               v-if="userData.userData.name"
@@ -78,8 +79,8 @@ function toggleMenu() {
             />
             <USkeleton
               v-else
-              class="h-10 w-10"
               :ui="{ rounded: 'rounded-full' }"
+              class="h-10 w-10"
             />
             <template #account="{ item }">
               <div class="text-left">
@@ -97,7 +98,3 @@ function toggleMenu() {
     </header>
   </div>
 </template>
-
-<style scoped>
-
-</style>

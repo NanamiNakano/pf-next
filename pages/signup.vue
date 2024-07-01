@@ -128,8 +128,8 @@ onMounted(async () => {
       <UDivider :label="$t('text.signup.hasAccount')" />
       <UButton
         :label="$t('text.signup.login')"
-        @click="navigateTo('/login')"
         block
+        @click="navigateTo('/login')"
       />
     </UForm>
   </div>

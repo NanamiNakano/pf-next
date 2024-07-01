@@ -35,11 +35,7 @@ onMounted(async () => {
       await navigateTo("/login")
     }
   })
-
-  if (!siteSetting.siteSetting.version) {
-    siteSetting.fetch()
-  }
-
+  siteSetting.fetch()
   if (localStorage.getItem("Authorization")) {
     userData.fetch()
   }
