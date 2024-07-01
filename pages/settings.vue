@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import RFormGroup from "~/components/RFormGroup.vue"
 import { z } from "zod"
+import RFormGroup from "~/components/RFormGroup.vue"
 import type { FormSubmitEvent } from "#ui/types"
 
 const userData = useUserDataStore()
@@ -158,7 +158,10 @@ async function onChangePassword(event: FormSubmitEvent<PasswordSchema>) {
                 @click="onChangeName"
               />
             </UButtonGroup>
-            <div v-else class="flex justify-between items-center gap-2">
+            <div
+              v-else
+              class="flex justify-between items-center gap-2"
+            >
               <div>
                 {{ userData.userData.name }}
               </div>

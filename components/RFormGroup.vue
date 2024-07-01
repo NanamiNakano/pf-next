@@ -7,7 +7,9 @@ defineProps<{
 <template>
   <UFormGroup>
     <template #label>
-      <div class="text-gray-400 font-bold">{{ title }}</div>
+      <div class="text-gray-400 font-bold">
+        {{ title }}
+      </div>
     </template>
     <slot />
   </UFormGroup>
