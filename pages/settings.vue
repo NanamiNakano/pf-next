@@ -200,50 +200,40 @@ async function onChangePassword(event: FormSubmitEvent<PasswordSchema>) {
         </div>
       </template>
     </UTabs>
-    <UModal v-model="changingPassword">
-      <UCard>
-        <template #header>
-          <div class="flex justify-between items-center">
-            <div>
-              Change password
-            </div>
-            <UButton
-              icon="i-tabler-x"
-              @click="changingPassword = false"
-            />
-          </div>
-        </template>
-        <UForm
-          :schema="passwordSchema"
-          :state="passwordState"
-          class="space-y-2"
-          @submit="onChangePassword"
+    <RClosableModal
+      v-model="changingPassword"
+      title="Change Password"
+    >
+      <UForm
+        :schema="passwordSchema"
+        :state="passwordState"
+        class="space-y-2"
+        @submit="onChangePassword"
+      >
+        <UFormGroup
+          name="oldPassword"
+          label="Old Password"
         >
-          <UFormGroup
-            name="oldPassword"
-            label="Old Password"
-          >
-            <UInput v-model="passwordState.oldPassword" />
-          </UFormGroup>
-          <UFormGroup
-            name="newPassword"
-            label="New Password"
-          >
-            <UInput v-model="passwordState.newPassword" />
-          </UFormGroup>
-          <UFormGroup
-            name="confirmNewPassword"
-            label="Confirm New Password"
-          >
-            <UInput v-model="passwordState.confirmNewPassword" />
-          </UFormGroup>
-          <UButton
-            :loading="changing"
-            label="Submit"
-            type="submit"
-          />
-        </UForm>
-      </UCard>
-    </UModal>
+          <UInput v-model="passwordState.oldPassword" />
+        </UFormGroup>
+        <UFormGroup
+          name="newPassword"
+          label="New Password"
+        >
+          <UInput v-model="passwordState.newPassword" />
+        </UFormGroup>
+        <UFormGroup
+          name="confirmNewPassword"
+          label="Confirm New Password"
+        >
+          <UInput v-model="passwordState.confirmNewPassword" />
+        </UFormGroup>
+        <UButton
+          :loading="changing"
+          label="Submit"
+          type="submit"
+        />
+      </UForm>
+    </RClosableModal>
   </div>
 </template>
