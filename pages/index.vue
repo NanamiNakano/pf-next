@@ -108,29 +108,23 @@ function openAnnouncement() {
       </template>
     </UCard>
 
-    <UModal v-model="showAnnouncementModel">
-      <UCard>
+    <RClosableModal v-model="showAnnouncementModel" :title="announcement.announcements.at(announcementPage - 1)?.title">
+      <div
+        v-if="announcement.announcements.length > 0"
+        class="prose dark:prose-invert max-w-none max-h-80 overflow-y-scroll w-full"
+      >
         <div
-          v-if="showAnnouncementModel"
-          class="prose dark:prose-invert max-w-none max-h-80 overflow-y-scroll w-full"
-        >
-          <h1 class="not-prose text-3xl text-black dark:text-white">
-            {{ announcement.announcements.at(announcementPage - 1)?.title }}
-          </h1>
-          <UDivider class="not-prose py-2" />
-          <div
-            v-dompurify-html="md.render(announcement.announcements.at(announcementPage - 1)!.content)"
-          />
-        </div>
+          v-dompurify-html="md.render(announcement.announcements.at(announcementPage - 1)!.content)"
+        />
+      </div>
 
-        <template #footer>
-          <UPagination
-            v-model="announcementPage"
-            :page-count="1"
-            :total="announcement.announcements.length"
-          />
-        </template>
-      </UCard>
-    </UModal>
+      <template #footer>
+        <UPagination
+          v-model="announcementPage"
+          :page-count="1"
+          :total="announcement.announcements.length"
+        />
+      </template>
+    </RClosableModal>
   </div>
 </template>
