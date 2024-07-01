@@ -115,7 +115,7 @@ function openAnnouncement() {
           class="prose dark:prose-invert max-w-none max-h-80 overflow-y-scroll w-full"
         >
           <h1 class="not-prose text-3xl text-black dark:text-white">
-            {{ announcement.announcements.at(announcementPage - 1)!.title }}
+            {{ announcement.announcements.at(announcementPage - 1)?.title }}
           </h1>
           <UDivider class="not-prose py-2" />
           <div

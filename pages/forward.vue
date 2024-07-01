@@ -466,205 +466,182 @@ onMounted(async () => {
         </UDropdown>
       </template>
     </RTable>
-    <UModal v-model="modalIsOpen">
-      <UCard>
-        <template #header>
-          <div class="flex justify-between items-center">
-            <div v-if="edit">
-              ID: {{ editingId }}
-            </div>
-            <div v-else>
-              {{ $t("verb.new") }}
-            </div>
-            <UButton
-              icon="i-tabler-x"
-              @click="modalIsOpen = false"
-            />
-          </div>
-        </template>
-        <UForm
-          :schema="schema"
-          :state="state"
-          class="space-y-4"
-          @submit="onSubmit"
+    <RClosableModal
+      v-model="modalIsOpen"
+      :title="edit ? `ID: ${editingId}` : t('verb.new')"
+    >
+      <UForm
+        :schema="schema"
+        :state="state"
+        class="space-y-4"
+        @submit="onSubmit"
+      >
+        <UFormGroup
+          :label="t('text.rule.name')"
+          name="name"
         >
-          <UFormGroup
-            :label="t('text.rule.name')"
-            name="name"
-          >
-            <UInput
-              v-model="state.name"
-            />
-          </UFormGroup>
-          <UFormGroup
-            :help="nodeHelp"
-            :label="t('text.rule.node')"
-            name="node_id"
-          >
-            <USelect
-              v-model.number="state.node_id"
-              :options="nodeData?.map(item => ({ name: item.name, value: item.id }))"
-              option-attribute="name"
-            />
-          </UFormGroup>
-          <UFormGroup
-            :label="t('text.rule.protocol')"
-            name="protocol"
-          >
-            <USelect
-              v-model="state.protocol"
-              :disabled="node === undefined"
-              :options="nodeProtocol"
-              option-attribute="name"
-            />
-          </UFormGroup>
-          <UFormGroup
-            :label="t('text.rule.listeningPort')"
-            name="bind"
-          >
-            <UInput
-              v-model="state.bind"
-              :placeholder="t('text.rule.placeholder.empty')"
-            />
-          </UFormGroup>
-          <UDivider />
-          <UFormGroup
-            :label="t('text.rule.mode')"
-            name="mode"
-          >
-            <USelect
-              v-model.number="state.mode"
-              :options="Object.entries(mode).map(([key, label]) => ({ name: label, value: key }))"
-              option-attribute="name"
-            />
-          </UFormGroup>
-          <UFormGroup
-            :label="t('text.rule.targets')"
-            name="targets"
-          >
-            <div class="flex flex-col space-y-2">
-              <div
-                v-for="(target, index) in state.targets"
-                :key="`${index}-${Math.random()}`"
-                class="flex-none"
+          <UInput
+            v-model="state.name"
+          />
+        </UFormGroup>
+        <UFormGroup
+          :help="nodeHelp"
+          :label="t('text.rule.node')"
+          name="node_id"
+        >
+          <USelect
+            v-model.number="state.node_id"
+            :options="nodeData?.map(item => ({ name: item.name, value: item.id }))"
+            option-attribute="name"
+          />
+        </UFormGroup>
+        <UFormGroup
+          :label="t('text.rule.protocol')"
+          name="protocol"
+        >
+          <USelect
+            v-model="state.protocol"
+            :disabled="node === undefined"
+            :options="nodeProtocol"
+            option-attribute="name"
+          />
+        </UFormGroup>
+        <UFormGroup
+          :label="t('text.rule.listeningPort')"
+          name="bind"
+        >
+          <UInput
+            v-model="state.bind"
+            :placeholder="t('text.rule.placeholder.empty')"
+          />
+        </UFormGroup>
+        <UDivider />
+        <UFormGroup
+          :label="t('text.rule.mode')"
+          name="mode"
+        >
+          <USelect
+            v-model.number="state.mode"
+            :options="Object.entries(mode).map(([key, label]) => ({ name: label, value: key }))"
+            option-attribute="name"
+          />
+        </UFormGroup>
+        <UFormGroup
+          :label="t('text.rule.targets')"
+          name="targets"
+        >
+          <div class="flex flex-col space-y-2">
+            <div
+              v-for="(target, index) in state.targets"
+              :key="`${index}-${Math.random()}`"
+              class="flex-none"
+            >
+              <UButtonGroup
+                orientation="horizontal"
               >
-                <UButtonGroup
-                  orientation="horizontal"
-                >
-                  <UInput
-                    v-model="target.Host"
-                    :placeholder="t('text.rule.placeholder.host')"
-                  />
-                  <UInput
-                    v-model="target.Port"
-                    :placeholder="t('text.rule.placeholder.port')"
-                    type="number"
-                  />
-                  <UButton
-                    icon="i-tabler-trash"
-                    @click="onDeleteTarget(index)"
-                  />
-                </UButtonGroup>
-              </div>
-              <div>
+                <UInput
+                  v-model="target.Host"
+                  :placeholder="t('text.rule.placeholder.host')"
+                />
+                <UInput
+                  v-model="target.Port"
+                  :placeholder="t('text.rule.placeholder.port')"
+                  type="number"
+                />
                 <UButton
+                  icon="i-tabler-trash"
+                  @click="onDeleteTarget(index)"
+                />
+              </UButtonGroup>
+            </div>
+            <div>
+              <UButton
+                icon="i-tabler-plus"
+                :label="t('verb.add')"
+                class="flex-none"
+                @click="onAddTarget"
+              />
+            </div>
+          </div>
+        </UFormGroup>
+        <UDivider :label="t('text.rule.advanced')" />
+        <UFormGroup
+          :label="t('text.rule.proxyProtocol')"
+          name="proxy_protocol"
+        >
+          <USelect
+            v-model.number="state.proxy_protocol"
+            :options="Object.entries(proxyProtocol).map(([key, label]) => ({ name: label, value: key }))"
+            option-attribute="name"
+          />
+        </UFormGroup>
+        <UFormGroup
+          :label="t('text.rule.config')"
+          name="conf"
+        >
+          <div class="flex flex-col space-y-2">
+            <div
+              v-for="conf in configs"
+              :key="conf.key"
+              class="flex-none"
+            >
+              <UButtonGroup
+                orientation="horizontal"
+              >
+                <UInput
+                  v-model="conf.key"
+                  disabled
+                />
+                <UInput
+                  v-model="state.conf[conf.key]"
+                  :placeholder="t('text.rule.placeholder.value')"
+                />
+                <UButton
+                  icon="i-tabler-trash"
+                  @click="delete state.conf[conf.key]"
+                />
+              </UButtonGroup>
+            </div>
+            <UFormGroup :error="(state.conf[pendingConfKey] !== undefined) && t('text.rule.placeholder.configExist')">
+              <UButtonGroup>
+                <UInput
+                  :key="t('text.rule.placeholder.key')"
+                  v-model="pendingConfKey"
+                />
+                <UButton
+                  :disabled="state.conf[pendingConfKey] !== undefined"
                   icon="i-tabler-plus"
                   :label="t('verb.add')"
-                  class="flex-none"
-                  @click="onAddTarget"
+                  @click="() => {
+                    state.conf[pendingConfKey] = ''
+                    pendingConfKey = ''
+                  }"
                 />
-              </div>
-            </div>
-          </UFormGroup>
-          <UDivider :label="t('text.rule.advanced')" />
-          <UFormGroup
-            :label="t('text.rule.proxyProtocol')"
-            name="proxy_protocol"
-          >
-            <USelect
-              v-model.number="state.proxy_protocol"
-              :options="Object.entries(proxyProtocol).map(([key, label]) => ({ name: label, value: key }))"
-              option-attribute="name"
-            />
-          </UFormGroup>
-          <UFormGroup
-            :label="t('text.rule.config')"
-            name="conf"
-          >
-            <div class="flex flex-col space-y-2">
-              <div
-                v-for="conf in configs"
-                :key="conf.key"
-                class="flex-none"
-              >
-                <UButtonGroup
-                  orientation="horizontal"
-                >
-                  <UInput
-                    v-model="conf.key"
-                    disabled
-                  />
-                  <UInput
-                    v-model="state.conf[conf.key]"
-                    :placeholder="t('text.rule.placeholder.value')"
-                  />
-                  <UButton
-                    icon="i-tabler-trash"
-                    @click="delete state.conf[conf.key]"
-                  />
-                </UButtonGroup>
-              </div>
-              <UFormGroup :error="(state.conf[pendingConfKey] !== undefined) && t('text.rule.placeholder.configExist')">
-                <UButtonGroup>
-                  <UInput
-                    :key="t('text.rule.placeholder.key')"
-                    v-model="pendingConfKey"
-                  />
-                  <UButton
-                    :disabled="state.conf[pendingConfKey] !== undefined"
-                    icon="i-tabler-plus"
-                    :label="t('verb.add')"
-                    @click="() => {
-                      state.conf[pendingConfKey] = ''
-                      pendingConfKey = ''
-                    }"
-                  />
-                </UButtonGroup>
-              </UFormGroup>
-            </div>
-          </UFormGroup>
-          <UDivider />
-          <UButton
-            :label="t('verb.submit')"
-            type="submit"
-          />
-        </UForm>
-      </Ucard>
-    </UModal>
-    <UModal v-model="diagnoseModalIsOpen">
-      <UCard>
-        <template #header>
-          <div class="flex justify-between items-center">
-            <div>
-              <div>{{ $t("verb.diagnose") }}</div>
-            </div>
-            <UButton
-              icon="i-tabler-x"
-              @click="diagnoseModalIsOpen = false; diagnosing = false"
-            />
+              </UButtonGroup>
+            </UFormGroup>
           </div>
-        </template>
-        <div
-          v-if="diagnosing"
-          class="flex flex-col space-y-2"
-        >
-          <UProgress animation="carousel" />
-          <div>Diagnosing...</div>
-        </div>
-        <div v-else>
-          Work in Progress
-        </div>
-      </UCard>
-    </UModal>
+        </UFormGroup>
+        <UDivider />
+        <UButton
+          :label="t('verb.submit')"
+          type="submit"
+        />
+      </UForm>
+    </RClosableModal>
+    <RClosableModal
+      v-model="diagnoseModalIsOpen"
+      :title="t('verb.diagnose')"
+    >
+      <div
+        v-if="diagnosing"
+        class="flex flex-col space-y-2"
+      >
+        <UProgress animation="carousel" />
+        <div>Diagnosing...</div>
+      </div>
+      <div v-else>
+        Work in Progress
+      </div>
+    </RClosableModal>
   </div>
 </template>
