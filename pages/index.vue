@@ -108,7 +108,10 @@ function openAnnouncement() {
       </template>
     </UCard>
 
-    <RClosableModal v-model="showAnnouncementModel" :title="announcement.announcements.at(announcementPage - 1)?.title">
+    <RClosableModal
+      v-model="showAnnouncementModel"
+      :title="announcement.announcements.at(announcementPage - 1)?.title"
+    >
       <div
         v-if="announcement.announcements.length > 0"
         class="prose dark:prose-invert max-w-none max-h-80 overflow-y-scroll w-full"

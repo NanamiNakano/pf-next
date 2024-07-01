@@ -104,6 +104,7 @@ onMounted(async () => {
         :label="$t('text.signup.confirmPassword')"
         name="confirmPassword"
         required
+        eager-validation
       >
         <UInput
           v-model="state.confirmPassword"

@@ -13,7 +13,6 @@ const items = computed(() => {
     return [{
       slot: "user",
       label: "User",
-      content: "User",
     }, {
       slot: "system",
       label: "System",
@@ -225,6 +224,7 @@ async function onChangePassword(event: FormSubmitEvent<PasswordSchema>) {
         <UFormGroup
           name="confirmNewPassword"
           label="Confirm New Password"
+          eager-validation
         >
           <UInput v-model="passwordState.confirmNewPassword" />
         </UFormGroup>
