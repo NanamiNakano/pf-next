@@ -1,11 +1,14 @@
 <script lang="ts" setup>
 defineProps<{
   title?: string
+  name?: string
 }>()
 </script>
 
 <template>
-  <UFormGroup>
+  <UFormGroup
+    :name
+  >
     <template #label>
       <div class="text-gray-400 font-bold">
         {{ title }}

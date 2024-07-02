@@ -26,8 +26,8 @@ const pageDropdown = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(item => ({
     <UTable
       v-model="model"
       :rows="tableRows"
-      :columns="columns"
-      :loading="loading"
+      :columns
+      :loading
       class="border-gray-300 dark:border-gray-600 border rounded"
     >
       <template

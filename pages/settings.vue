@@ -2,8 +2,10 @@
 import { z } from "zod"
 import RFormGroup from "~/components/RFormGroup.vue"
 import type { FormSubmitEvent } from "#ui/types"
+import { abbreviatedSha } from "~build/git"
 
 const userData = useUserDataStore()
+const siteSetting = useSiteSettingStore()
 const pfClient = usePfClient()
 const toast = useToast()
 const { t } = useI18n()
@@ -16,14 +18,12 @@ const items = computed(() => {
     }, {
       slot: "system",
       label: "System",
-      content: "System",
     }]
   }
 
   return [{
     slot: "user",
     label: "User",
-    content: "User",
   }]
 })
 
@@ -43,12 +43,12 @@ const selected = computed({
   },
 })
 
+const editName = ref(false)
 const editingName = ref(false)
-const editing = ref(false)
 const newName = ref("")
 
 async function onChangeName() {
-  editing.value = true
+  editingName.value = true
   newName.value = userData.userData.name
   await pfClient.user.changeName(newName.value).then((rps) => {
     if (rps.Ok) {
@@ -59,8 +59,8 @@ async function onChangeName() {
       toast.add({ title: "Change name unsuccessfully", description: rps.Msg, color: "red" })
     }
   })
-  editing.value = false
   editingName.value = false
+  editName.value = false
 }
 
 const permission = {
@@ -105,11 +105,11 @@ const passwordState = ref({
   confirmNewPassword: undefined,
 })
 
+const changePassword = ref(false)
 const changingPassword = ref(false)
-const changing = ref(false)
 
 async function onChangePassword(event: FormSubmitEvent<PasswordSchema>) {
-  changing.value = true
+  changingPassword.value = true
   await pfClient.user.changePassword(event.data.oldPassword, event.data.newPassword).then(async (rps) => {
     if (rps.Ok) {
       toast.add({ title: "Change password successfully, please re-login" })
@@ -125,8 +125,8 @@ async function onChangePassword(event: FormSubmitEvent<PasswordSchema>) {
       toast.add({ title: "Change password unsuccessfully", description: rps.Msg, color: "red" })
     }
   })
-  changing.value = false
   changingPassword.value = false
+  changePassword.value = false
 }
 </script>
 
@@ -140,6 +140,7 @@ async function onChangePassword(event: FormSubmitEvent<PasswordSchema>) {
     >
       <template #user>
         <div class="flex flex-col gap-4">
+          <UDivider label="Info" />
           <RFormGroup title="ID">
             {{ userData.userData.id }}
           </RFormGroup>
@@ -147,12 +148,12 @@ async function onChangePassword(event: FormSubmitEvent<PasswordSchema>) {
             {{ userData.userData.username }}
           </RFormGroup>
           <RFormGroup title="Display Name">
-            <UButtonGroup v-if="editingName">
+            <UButtonGroup v-if="editName">
               <UInput
                 v-model="newName"
               />
               <UButton
-                :loading="editing"
+                :loading="editingName"
                 icon="i-tabler-check"
                 @click="onChangeName"
               />
@@ -167,7 +168,7 @@ async function onChangePassword(event: FormSubmitEvent<PasswordSchema>) {
               <UButton
                 icon="i-tabler-pencil"
                 variant="soft"
-                @click="editingName = true"
+                @click="editName = true"
               />
             </div>
           </RFormGroup>
@@ -193,14 +194,26 @@ async function onChangePassword(event: FormSubmitEvent<PasswordSchema>) {
           <RFormGroup title="Password">
             <UButton
               label="Change password"
-              @click="changingPassword = true"
+              @click="changePassword = true"
             />
+          </RFormGroup>
+        </div>
+      </template>
+
+      <template #system>
+        <div class="flex flex-col gap-4">
+          <UDivider label="General" />
+          <RFormGroup title="Backend Version">
+            {{ siteSetting.siteSetting.version }}
+          </RFormGroup>
+          <RFormGroup title="Frontend Version">
+            NEXT-{{ abbreviatedSha }}
           </RFormGroup>
         </div>
       </template>
     </UTabs>
     <RClosableModal
-      v-model="changingPassword"
+      v-model="changePassword"
       title="Change Password"
     >
       <UForm
@@ -229,7 +242,7 @@ async function onChangePassword(event: FormSubmitEvent<PasswordSchema>) {
           <UInput v-model="passwordState.confirmNewPassword" />
         </UFormGroup>
         <UButton
-          :loading="changing"
+          :loading="changingPassword"
           label="Submit"
           type="submit"
         />

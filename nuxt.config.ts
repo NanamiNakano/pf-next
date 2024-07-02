@@ -37,6 +37,7 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@nuxt/ui",
     "@pinia/nuxt",
+    "unplugin-info/nuxt",
   ],
 
   eslint: {
