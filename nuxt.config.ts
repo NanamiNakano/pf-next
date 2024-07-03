@@ -1,6 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { sentryVitePlugin } from "@sentry/vite-plugin"
-
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/tailwind.css", "~/assets/css/transition.css"],
@@ -85,13 +83,5 @@ export default defineNuxtConfig({
     icons: ["tabler"],
   },
 
-  vite: {
-    plugins: [
-      sentryVitePlugin({
-        authToken: process.env.SENTRY_AUTH_TOKEN,
-        org: "nanami-de-lab",
-        project: "port-forward-next",
-      }),
-    ],
-  },
+  compatibilityDate: "2024-07-03",
 })
