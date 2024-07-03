@@ -19,7 +19,7 @@ const links = computed(() => {
       to: "/forward",
     }, {
       label: t("title./nat"),
-      icon: "i-tabler-route-2",
+      icon: "i-tabler-route-square",
       to: "/nat",
     }], [{
       label: "Preference",
@@ -70,7 +70,7 @@ const links = computed(() => {
       @click="toggleCollapsed"
     >
       <TablerIcon
-        :name="`layout-sidebar-left-${(isCollapsed?'expand':'collapse')}`"
+        :name="`layout-sidebar-left-${(isCollapsed?'expand':'collapse')}-filled`"
         class="container w-7 h-7 flex-shrink-0 transition"
       />
       <div class="truncate">
