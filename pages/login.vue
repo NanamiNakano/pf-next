@@ -67,8 +67,8 @@ onMounted(async () => {
   <div class="mx-4 w-full max-w-md">
     <UForm
       v-if="!loggedIn"
-      :schema="schema"
-      :state="state"
+      :schema
+      :state
       class="space-y-4"
       @submit="onSubmit"
     >

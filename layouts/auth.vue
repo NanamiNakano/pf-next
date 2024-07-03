@@ -16,7 +16,3 @@ const siteSetting = useSiteSettingStore()
     </div>
   </div>
 </template>
-
-<style scoped>
-
-</style>

@@ -38,7 +38,3 @@ const callbackToggleMenu = (show: boolean) => {
     </div>
   </div>
 </template>
-
-<style scoped>
-
-</style>

@@ -12,8 +12,8 @@ importers:
         specifier: ^1.1.115
         version: 1.1.115
       '@nanaminakano/pfsdk':
-        specifier: ^0.1.14
-        version: 0.1.14
+        specifier: ^0.1.15
+        version: 0.1.15
       '@nuxt/eslint':
         specifier: ^0.3.13
         version: 0.3.13(eslint@8.57.0)(magicast@0.3.4)(rollup@4.18.0)(typescript@5.5.3)(vite@5.3.2(@types/node@20.14.9)(terser@5.31.1))
@@ -913,8 +913,8 @@ packages:
     peerDependencies:
       rollup: ^1.20.0 || ^2.0.0 || ^3.0.0 || ^4.0.0
 
-  '@nanaminakano/pfsdk@0.1.14':
-    resolution: {integrity: sha512-EmX7zHna9euBvF3TTnKMEbKsZvOKrfTRhkUrPz52E5pIOD2Ok0Xo6c4fMjN1kR/Yj8Ot9fXO+XwvQhbibTsI5A==}
+  '@nanaminakano/pfsdk@0.1.15':
+    resolution: {integrity: sha512-+/P/Dd7g/YOymKjOXfZfpFiXTX84+PvqcMK09f3mqACdIoeBrsKedE1wuBVxKxvrew4aShnkXCFwbuN6b4qkFQ==}
 
   '@netlify/functions@2.8.0':
     resolution: {integrity: sha512-kHInQKtMuFlqD7vxaJ8tjd7spv6DTrRuTovvWNDmvwTfkubVfF7KYiypsPR5wkKvSz76GHv86RBCLkjIxvwgDg==}
@@ -5730,7 +5730,7 @@ snapshots:
       json5: 2.2.3
       rollup: 4.18.0
 
-  '@nanaminakano/pfsdk@0.1.14':
+  '@nanaminakano/pfsdk@0.1.15':
     dependencies:
       axios: 1.7.2
     transitivePeerDependencies:
