@@ -22,9 +22,9 @@ const avatarDropdown = computed(() => [
     slot: "account",
     disabled: true,
   }], [{
-    label: t("text.header.settings"),
-    icon: "i-tabler-settings",
-    click: () => navigateTo("/settings?tab=user"),
+    label: t("text.header.preference"),
+    icon: "i-tabler-mood-cog",
+    click: () => navigateTo("/preference"),
   }, {
     label: t("text.header.logout"),
     icon: "i-tabler-logout",

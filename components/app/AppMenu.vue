@@ -1,13 +1,38 @@
 <script lang="ts" setup>
 const isCollapsed = ref(false)
 const { t } = useI18n()
+const userData = useUserDataStore()
 
 function toggleCollapsed() {
   isCollapsed.value = !isCollapsed.value
 }
 
-const links = computed(() => [
-  [{
+const links = computed(() => {
+  if (userData.userData.permission && userData.userData.permission === 2) {
+    return [[{
+      label: t("title./"),
+      icon: "i-tabler-home",
+      to: "/",
+    }], [{
+      label: t("title./forward"),
+      icon: "i-tabler-polygon",
+      to: "/forward",
+    }, {
+      label: t("title./nat"),
+      icon: "i-tabler-route-2",
+      to: "/nat",
+    }], [{
+      label: "Preference",
+      icon: "i-tabler-mood-cog",
+      to: "/preference",
+    }, {
+      label: t("title./settings"),
+      icon: "i-tabler-settings",
+      to: "/settings",
+    }]]
+  }
+
+  return [[{
     label: t("title./"),
     icon: "i-tabler-home",
     to: "/",
@@ -20,11 +45,11 @@ const links = computed(() => [
     icon: "i-tabler-route-2",
     to: "/nat",
   }], [{
-    label: t("title./settings"),
-    icon: "i-tabler-settings",
-    to: "/settings",
-  }],
-])
+    label: t("title./preference"),
+    icon: "i-tabler-mood-cog",
+    to: "/preference",
+  }]]
+})
 </script>
 
 <template>

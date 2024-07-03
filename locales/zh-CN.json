@@ -29,7 +29,7 @@
     },
     "header": {
       "logout": "登出",
-      "settings": "设置"
+      "preference": "偏好设置"
     },
     "index": {
       "latestAnnouncement": "最新公告",
@@ -139,7 +139,8 @@
     "/login": "登入",
     "/nat": "内网穿透",
     "/signup": "注册",
-    "/settings": "设置"
+    "/settings": "设置",
+    "/preference": "偏好设置"
   },
   "verb": {
     "add": "添加",
