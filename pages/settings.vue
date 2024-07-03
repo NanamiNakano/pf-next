@@ -1,9 +1,9 @@
 <script lang="ts" setup>
+import type { AdminSystemSettings } from "@nanaminakano/pfsdk"
 import RFormGroup from "~/components/RFormGroup.vue"
 import { abbreviatedSha } from "~build/git"
 
-const siteSetting = useSiteSettingStore()
-
+const siteSetting = ref({} as AdminSystemSettings)
 const items = computed(() => [{
   slot: "general",
   label: "General",
@@ -20,7 +20,7 @@ const items = computed(() => [{
       <template #general>
         <div class="flex flex-col gap-4">
           <RFormGroup title="Backend Version">
-            {{ siteSetting.siteSetting.version }}
+            {{ siteSetting.version }}
           </RFormGroup>
           <RFormGroup title="Frontend Version">
             NEXT-{{ abbreviatedSha }}
